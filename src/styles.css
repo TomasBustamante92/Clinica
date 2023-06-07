@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+
+html{
+    margin:0px;
+    height:100%;
+    width:100%;
+    background-color: rgb(107, 169, 216);
+    /* background:url("https://cdn.wallpapersafari.com/86/91/9i4pqm.jpg")no-repeat center center fixed;  */
+    -webkit-background-size:cover;
+    -o-background-size:cover;
+    -moz-background-size:cover;
+    background-size:cover;
+}
+
+div{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.white{
+    color: azure;
+}

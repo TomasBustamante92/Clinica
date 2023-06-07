@@ -1,0 +1,79 @@
+
+
+<!-- PopUp -->
+<div class="modal fade" id="colorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content text-bg-dark" style="text-align: center;">
+        <app-registro></app-registro>
+        </div>
+    </div>
+</div>
+<!-- PopUp -->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 order-md-1 mb-4">
+
+            <br>
+            <br>        
+            <h1 class="text-center" style="color: black">Especialistas</h1>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" (click)="abrirModulo()">Nuevo</button>
+            <div class="list-group bg-light">
+                <button type="button" class="list-group-item btn btn-secondary" (click)="elegirEspecialista(especialista)"
+                *ngFor="let especialista of especialistas">
+                <i *ngIf="!especialista.habilitado" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{especialista.mail}}</i>
+                <span *ngIf="especialista.habilitado">{{especialista.mail}}</span>
+            </button>  
+            </div>
+        </div>
+        <div class="col-md-8 order-md-2">
+
+            <!-- //////////////////////////////////////// -->
+
+            <br><br>
+            <h1 style="text-align: center;" class="mb-3">Datos</h1>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="edad">Nombre</label>
+                    <input name="nombre" [(ngModel)]="especialista.nombre" [readonly]="true" class="form-control"/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="apellido">Apellido</label>
+                    <input name="apellido" [(ngModel)]="especialista.apellido" [readonly]="true" class="form-control"/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="mail">Mail</label>
+                <input name="mail" [(ngModel)]="especialista.mail" [readonly]="true" class="form-control"/>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="edad">Edad</label>
+                    <input name="edad" [(ngModel)]="especialista.edad" [readonly]="true" class="form-control"/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="dni">Dni</label>
+                    <input name="dni" [(ngModel)]="especialista.dni" [readonly]="true" class="form-control"/>
+                </div>
+            </div>
+            <label for="dni">Especialidades</label>
+            <div class="list-group bg-light">
+                <br>
+                <p style="text-align: center;" *ngFor="let especialidades of especialista.especialidades">
+                    {{especialidades}}
+                </p>
+            </div>
+            <div class="mb-3">
+                <br>
+                <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': especialista.habilitado, 'btn-secondary': !especialista.habilitado}"(click)="seleccionarEspecialidad(true)">Habilitado</button>
+                <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': !especialista.habilitado, 'btn-secondary': especialista.habilitado}" (click)="seleccionarEspecialidad(false)">Inhabilitado</button>        
+             </div>
+             <br>
+             <img *ngIf="especialista.imagen != ''" [ngClass]="{'inhabilitado': !especialista.habilitado}" src="{{especialista.imagen}}" alt="image" class="imagen">
+            <!-- /////// -->
+            
+        </div>
+    </div>
+</div>

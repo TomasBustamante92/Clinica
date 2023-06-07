@@ -1,0 +1,52 @@
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark h5">
+  <div class="container-fluid">
+    <img class="nav" src="https://cdn-icons-png.flaticon.com/512/197/197881.png" alt="">
+    <a class="navbar-brand" routerLink="" style="color: rgb(239,239,239)">Clinica Bustamante</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-4 mb-lg-0">
+      </ul>
+      <form class="d-flex">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" routerLink="">Home</a>
+          </li>
+          <li class="nav-item" *ngIf="tipoUsuario == 'Admin'">
+            <a class="nav-link" routerLink="Usuarios">Usuarios</a>
+          </li>
+          
+          <li class="nav-item" *ngIf="!estaLogueado">
+            <a class="nav-link" routerLink="Registro">Registrarse</a>
+          </li>
+          <button class="btn btn-primary" routerLink="Login" *ngIf="!estaLogueado"><b>Login</b></button> 
+          <li class="nav-item" *ngIf="estaLogueado">
+            <a class="nav-link" >|</a>
+          </li>
+          <li class="nav-item" *ngIf="estaLogueado">
+            <a class="nav-link" style="color: rgb(146,199,85);" >usuario.nombreUsuario</a>
+          </li>
+          <button class="btn btn-primary" (click)="logout()" *ngIf="estaLogueado"><b>Logout</b></button> 
+        </ul>
+      </form>
+    </div>
+  </div>
+</nav>
+<!-- Navbar -->
+
+<!--Spinner-->
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.9)"
+  size="medium"
+  color="#fff"
+  type="ball-scale-multiple"
+  template="<img style='width: 200px;' src='https://cdn.filestackcontent.com/resize=width:700/KIDQbNY2SmmtaFcZi8kQ' />">
+  <br>
+  <p style="font-size: 20px; color: white">Cargando...</p>
+</ngx-spinner>
+<!--Spinner-->
+
+<router-outlet></router-outlet>
