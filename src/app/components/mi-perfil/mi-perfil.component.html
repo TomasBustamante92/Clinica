@@ -1,0 +1,40 @@
+
+<div style="text-align: center;">
+    
+    <br>
+    <br>
+    <h1>{{nombreCompleto}}</h1>
+    <br>
+    <br>
+    Mail
+    <h2>{{mail}}</h2>
+    <br>
+    Edad
+    <br>
+    <h2>{{edad}}</h2>
+    <br>
+    Dni
+    <br>
+    <h2>{{dni}}</h2>
+    <br>
+    <div *ngIf="tipo == 'Paciente'">
+        Obra Social
+        <br>
+        <h2>{{obraSocial}}</h2>
+    </div>
+    <div *ngIf="tipo == 'Especialista'">
+        Especialidades
+        <br>
+        <h2 *ngFor="let especialidad of especialidades">{{especialidad}}</h2>
+    </div>
+    <br>
+    <div *ngIf="tipo != 'Paciente'">
+        <img src="{{imagenes[0]}}" alt="image" class="imagen">
+    </div>
+    <div *ngIf="tipo == 'Paciente'" class="btn-group">
+    <img src="{{imagenes[0]}}" alt="image" class="imagen">
+    <p style="padding-right: 100px"></p>
+    <img src="{{imagenes[1]}}" alt="image" class="imagen">
+    </div>
+       
+</div>

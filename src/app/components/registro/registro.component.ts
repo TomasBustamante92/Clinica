@@ -30,7 +30,7 @@ export class RegistroComponent implements OnInit{
   imagenes:string[] = ["",""];
   password = "";
   passwordRepetir = "";
-  tipoUsuario = 'Paciente';
+  tipoUsuario = "Paciente";
   usuario:any;
 
   // Dom
@@ -39,17 +39,19 @@ export class RegistroComponent implements OnInit{
   usuarioAprobado = false;
   tituloUsuarioAprobado = "";
   textoUsuarioAprobado = "";
+  siteKey = "6LfM23omAAAAAHi_V-M2LNXMYQxJfokwDHxPQ5xU";
+  captachaAceptado = false;
 
    // Popup
    formModal: any;
    popUpTitulo = "";
    popUpMensaje = "";
-   esPopUpColor = true;
 
    // UsuarioElegido
    tipoUsuarioElegido = "";
 
-   ngOnInit(): void {    
+   ngOnInit(): void {  
+    this.captachaAceptado = false;  
     this.formModal = new window.bootstrap.Modal(
       document.getElementById('myModal')
     );
@@ -64,6 +66,7 @@ export class RegistroComponent implements OnInit{
       });
       this.ordernarListaEspecialidades();
     });
+
   }
   
 
@@ -74,6 +77,15 @@ export class RegistroComponent implements OnInit{
     else{
       this.tipoUsuarioElegido = "";
     }
+    this.usuarioService.getTipoRegistro$().subscribe(tipo => {
+      if(tipo != ""){
+        this.tipoUsuario = tipo;
+      }
+    });
+  }
+
+  resultadoCaptcha(resultado:any){
+    this.captachaAceptado = true;
   }
 
   seleccionarEspecialidad(tipo:string){
@@ -87,6 +99,7 @@ export class RegistroComponent implements OnInit{
       this.tipoUsuario = 'Admin';
     }
   }
+
 
   eliminarEspecialidadUsuario(especialidad:string){
     let indiceEsp = -1;
@@ -149,21 +162,31 @@ export class RegistroComponent implements OnInit{
       return null;
     }
 
+    if(!this.captachaAceptado){
+      this.abrirCaptchaForm();
+      return null;
+    }
+
     this.registrarAuth(); 
     return null;
+  }
+
+  abrirCaptchaForm(){
+    this.mensajeError = "Confirme que no es un robot";
+    this.spinner.detenerSpinner();
   }
 
   setearUsuario(){
     if(this.tipoUsuario == "Paciente"){
       this.usuario = new Paciente(this.nombre,this.apellido,Number(this.edad),this.dni,this.obraSocial,this.mail,this.password,this.imagenes);
-      return this.usuarioService.estaPacienteEnBaseDeDatos(this.usuario);
     }
     else if(this.tipoUsuario == "Especialista"){
       this.usuario = new Especialista("",this.nombre,this.apellido,Number(this.edad),this.dni,this.especialidadesUsuario,this.mail,this.password,this.imagenes[0]);
-      return this.usuarioService.estaEspecialistaEnBaseDeDatos(this.usuario);
     }
-    this.usuario = new Admin(this.nombre,this.apellido,Number(this.edad),this.dni,this.mail,this.password,this.imagenes[0]);
-    return this.usuarioService.estaAdminEnBaseDeDatos(this.usuario);
+    else{
+      this.usuario = new Admin("",this.nombre,this.apellido,Number(this.edad),this.dni,this.mail,this.password,this.imagenes[0]);
+    }
+    return this.usuarioService.estaUsuarioEnBaseDeDatos(this.mail);
   }
 
   agregarEspecialidad(){
@@ -176,15 +199,10 @@ export class RegistroComponent implements OnInit{
   }
 
   verificarMail(){
-    if(this.tipoUsuario == "Paciente"){
+    if(this.tipoUsuario == "Paciente" || this.tipoUsuario == "Especialista"){
       this.usuarioAprobado = true;
       this.tituloUsuarioAprobado = "Mail enviado";
       this.textoUsuarioAprobado = "Revise su correo \nSi no lo encuentra puede estar en spam";
-    }
-    else if(this.tipoUsuario == "Especialista"){
-      this.usuarioAprobado = true;
-      this.tituloUsuarioAprobado = "Registro satisfactorio";
-      this.textoUsuarioAprobado = "Espere mientras los administradores aprueban su registro";
     }
   }
 
@@ -201,7 +219,7 @@ export class RegistroComponent implements OnInit{
     .then(responseRegistro => {
       this.usuarioService.registrarUsuario(this.tipoUsuario, this.usuario);
       this.spinner.detenerSpinner();
-      if(this.tipoUsuario == "Paciente"){
+      if(this.tipoUsuario != "Admin"){
         this.mandarMail(responseRegistro);
       }
       else{

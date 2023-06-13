@@ -14,10 +14,9 @@ export class UsuariosComponent implements OnInit {
 
   especialistas:Especialista[];
   formModal: any;
-  componenteAbierto: boolean = false;
 
   // especialista elegido
-  especialista:Especialista = new Especialista("","","",0,"",[""],"","",""); ;
+  especialista:Especialista = new Especialista("","","",0,"",[""],"","","");
 
   constructor(private usuarioService:UsuariosService, private spinner:SpinnerService, private data:DataService){}
 
@@ -28,10 +27,8 @@ export class UsuariosComponent implements OnInit {
       this.spinner.detenerSpinner();
     });
     this.formModal = new window.bootstrap.Modal(
-      document.getElementById('colorModal')
+      document.getElementById('registroModal')
     );
-    this.componenteAbierto = true;
-    console.log(this.especialistas);
   }
 
   ngAfterViewInit() {

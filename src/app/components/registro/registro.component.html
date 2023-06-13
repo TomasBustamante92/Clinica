@@ -21,7 +21,6 @@
 
 
 
-
 <div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1"
    role="dialog" id="modalSignin">
   <div class="modal-dialog"  role="document">
@@ -34,45 +33,46 @@
         <br>
 
       <div class="modal-body p-5 pt-0">
-      <div class="form-floating mb-3" *ngIf="tipoUsuarioElegido != 'Admin'">
+      <!-- <div class="form-floating mb-3" *ngIf="tipoUsuarioElegido != 'Admin'">
           <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Paciente', 'btn-secondary': tipoUsuario != 'Paciente'}"(click)="seleccionarEspecialidad('paciente')">Paciente</button>
           <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Especialista', 'btn-secondary': tipoUsuario != 'Especialista'}" (click)="seleccionarEspecialidad('especialista')">Especialista</button>        
-      </div>
+      </div> -->
       <div class="form-floating mb-3" *ngIf="tipoUsuarioElegido == 'Admin'">
-        <button class="w-100 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Paciente', 'btn-secondary': tipoUsuario != 'Paciente'}"(click)="seleccionarEspecialidad('paciente')">Paciente</button>
+        <button class="w-100 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Paciente', 'btn-secondary': tipoUsuario != 'Paciente'}" (click)="seleccionarEspecialidad('paciente')">Paciente</button>
         <br>
         <button class="w-100 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Especialista', 'btn-secondary': tipoUsuario != 'Especialista'}" (click)="seleccionarEspecialidad('especialista')">Especialista</button>        
         <br>
         <button class="w-100 btn btn-lg rounded-3" [ngClass]="{'btn-success': tipoUsuario == 'Admin', 'btn-secondary': tipoUsuario != 'Admin'}" (click)="seleccionarEspecialidad('admin')">Admin</button>
       </div>
+      
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="nombre" type="nombre" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="nombre" type="nombre" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput1" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Nombre</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="apellido" type="apellido" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="apellido" type="apellido" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput2" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Apellido</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="edad" type="edad" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="edad" type="edad" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput3" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Edad</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="dni" type="dni" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="dni" type="dni" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput4" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">DNI</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="mail" type="mail" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="mail" type="mail" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput5" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Mail</label>
       </div>
 
       <div class="form-floating mb-3" *ngIf="tipoUsuario == 'Paciente'">
-        <input [(ngModel)]="obraSocial" type="obraSocial" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="obraSocial" type="obraSocial" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput6" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Obra Social</label>
       </div>
 
@@ -101,23 +101,30 @@
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="imagenes[0]" type="imagen" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="imagenes[0]" type="imagen" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput7" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Imagen</label>
       </div>
 
       <div class="form-floating mb-3" *ngIf="tipoUsuario == 'Paciente'">
-        <input [(ngModel)]="imagenes[1]" type="imagen2" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="imagenes[1]" type="imagen2" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput8" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Imagen 2</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="password" type="password" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="password" type="password" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput9" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Contraseña</label>
       </div>
 
       <div class="form-floating mb-3">
-        <input [(ngModel)]="passwordRepetir" type="password" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput" placeholder="name@example.com">
+        <input [(ngModel)]="passwordRepetir" type="password" class="form-control rounded-3" (ngModelChange)="resetearMensajeError()" id="floatingInput10" placeholder="name@example.com">
         <label style="color: black;" for="floatingInput">Repetir contraseña</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <ngx-recaptcha2 #captchaElem
+        [siteKey]="siteKey"
+        (success)="resultadoCaptcha($event)">
+        </ngx-recaptcha2>
       </div>
 
         <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" (click)="registrarUsuario()">Registrarse</button>

@@ -17,6 +17,11 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { BsDropdownModule,BsDropdownConfig } from 'ngx-bootstrap/dropdown';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { provideAuth,getAuth } from '@angular/fire/auth';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgxCaptchaModule } from 'ngx-captcha';
+import { MiPerfilComponent } from './components/mi-perfil/mi-perfil.component';
+import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-turno.component';
+import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +31,9 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
     ErrorComponent,
     HomeComponent,
     UsuariosComponent,
+    MiPerfilComponent,
+    SolicitarTurnoComponent,
+    MisTurnosComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +46,8 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
     NgxSpinnerModule,
     BsDropdownModule,
     provideAuth(() => getAuth()),
+    NgxCaptchaModule,
+    ReactiveFormsModule
   ],
   providers: [DataService, BsDropdownConfig],
   bootstrap: [AppComponent]

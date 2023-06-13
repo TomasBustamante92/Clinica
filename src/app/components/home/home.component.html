@@ -1,14 +1,42 @@
 
 
+<!-- PopUp -->
+<div class="modal fade" id="colorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content text-bg-dark" style="text-align: center;">
+        <app-registro></app-registro>
+        </div>
+    </div>
+</div>
+<!-- PopUp -->
+
 <div class="white" style="text-align: center;">
-    
-    <img src="https://centerforpainrelief.com/wp-content/uploads/2022/06/doc-gif-transparent.gif" alt="Italian Trulli">
     <br>
     <div *ngIf="!estaLogueado">
-        <button class="btn btn-light botonGrande" routerLink="Login"><b>Ingresar</b></button>
+        <h1>Registrarse</h1>
+        <br>
+        <div class="btn-group">
+            <div>
+            <h3>Paciente</h3> 
+                <button class="imagenBoton" (click)="abrirModulo('Paciente')"><img class="imagenBoton sombrita" src="https://i.imgflip.com/273l7q.jpg?a468192" height="300px" width="300px" alt="Italian Trulli"></button>
+            </div>
+            <p style="padding-right: 100px"></p>
+            <div>
+                <h3>Especialista</h3>
+                <button class="imagenBoton" (click)="abrirModulo('Especialista')"><img class="imagenBoton sombrita" src="https://pbs.twimg.com/media/EoV5pI_XYAkdK4W?format=jpg&name=small" height="300px" width="300px" alt="Italian Trulli"></button>
+            </div>
+        
+        </div>
     </div>
+    
+    
     <div *ngIf="estaLogueado">
+        <img src="https://centerforpainrelief.com/wp-content/uploads/2022/06/doc-gif-transparent.gif" height="600px" alt="Italian Trulli">
         <h1>Bienvenido</h1>
+        <br>
+        <button class="btn btn-primary" routerLink="SolicitarTurno">Solicitar Turno</button>
+        <br>
+        <br>
     </div>
 
 </div>

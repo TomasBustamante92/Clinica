@@ -1,0 +1,91 @@
+
+<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<div class="modal-content text-bg-dark" style="text-align: center;">
+<div class="modal modal-sheet position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+         <h1 *ngIf="etapa != 'confirmar' && etapa != 'fin'">Solicitar Turno</h1>
+
+         <br>
+         <!-- Dropdown especialidades -->
+         <div class="form-floating mb-3" *ngIf="etapa == 'especialidad'">
+         <h4>Especialidad</h4>
+         <div *ngFor="let esp of especialidades">
+            <button class="btn btn-primary" (click)="elegirEspecialidad(esp)">{{esp}}</button> 
+            <br><br>
+         </div>
+         <br><br>
+         <div style="text-align: right;">
+            <button class="btn btn-warning" (click)="volver('home')" >Volver al Home</button> 
+         </div>
+         </div>
+        <!-- Dropdown especialidades-->
+
+         <!-- Dropdown especialistas -->
+         <div class="form-floating mb-3" *ngIf="etapa == 'especialista'">
+         <h4>Especialidad</h4>
+         <div *ngFor="let esp of especialistas">
+            <button class="btn btn-primary" (click)="elegirEspecialista(esp.nombre, esp.apellido)">{{esp.nombre + ' ' + esp.apellido}}</button> 
+            <br><br>
+         </div>
+         <p *ngIf="especialistas.length == 0"><br>No se encuentran especialistas con esta especialidad <br>Elija otra por favor</p>
+         <br><br>
+         <div style="text-align: right;">
+            <button class="btn btn-warning" (click)="volver('especialidad')" >Volver</button> 
+         </div>
+         </div>
+         <!-- Dropdown especialistas-->
+
+         <!-- HORARIOS DISPONIBLES -->
+         <div class="modal-content rounded-4 shadow" *ngIf="etapa == 'horario'">  
+            <div class="modal-body p-5 pt-0">
+               <br>   
+               <div style="text-align: right; color:black;">
+                  {{diaString}} {{dia}} de {{mes}}
+                  <button class="btn" [ngClass]="{'btn-primary': restarDia, 'btn-secondary': !restarDia}" (click)="cambiarDia('antes')"><</button> 
+                  <button class="btn" [ngClass]="{'btn-primary': sumarDia, 'btn-secondary': !sumarDia}" (click)="cambiarDia('despues')">></button> 
+               </div>
+               <br>
+               <div class="table">
+                  <h4 style="text-align: center; color:black;">Horarios disponibles</h4>
+                  <div class="list-group bg-light">
+                        <button type="button" class="list-group-item btn btn-primary"  
+                        *ngFor="let horario of horariosDisponibles" (click)="elegirHorario(horario)">{{horario}}</button>
+                  </div>
+               </div>
+               <button class="btn btn-warning" (click)="volver('especialista')" >Volver</button> 
+            </div>
+         </div>
+         <!-- HORARIOS DISPONIBLES -->
+
+
+         <!-- Confirmar turno -->
+         <div class="form-floating mb-3" *ngIf="etapa == 'confirmar'">
+            <h1>Confirmar turno</h1>
+            <br>
+            <p>Especialidad <br>
+            {{especialidadElegida}}</p>
+            <br>
+            <p>Especialista <br>
+            {{especialistaElegidoStr}}</p>
+            <br>
+            <p>Horario <br>
+            {{diaElegido}}</p> 
+            <button class="btn btn-success" (click)="confirmar()" >Confirmar</button> 
+            <br><br>
+            <div style="text-align: right;">
+               <button class="btn btn-warning" (click)="volver('horario')" >Volver</button> 
+            </div>
+            </div>
+            <!-- Confirmar turno-->
+
+            <!-- Turno Solicitado -->
+            <div class="form-floating mb-3" *ngIf="etapa == 'fin'">
+            <h1>Turno Solicitado</h1>
+            <p>Ir a mis turnos</p>
+            <br><br>
+               <button class="btn btn-warning" (click)="volver('irMisTurno')" >Mis Turnos</button> 
+            </div>
+            <!-- Turno Solicitado-->
+      </div>
+   </div>
+</div>
+

@@ -15,19 +15,29 @@
           <li class="nav-item active">
             <a class="nav-link" routerLink="">Home</a>
           </li>
+          
+          <li class="nav-item" *ngIf="estaLogueado">
+            <a class="nav-link" routerLink="MiPerfil">Perfil</a>
+          </li>
+
           <li class="nav-item" *ngIf="tipoUsuario == 'Admin'">
             <a class="nav-link" routerLink="Usuarios">Usuarios</a>
           </li>
           
-          <li class="nav-item" *ngIf="!estaLogueado">
+          <!-- <li class="nav-item" *ngIf="!estaLogueado">
             <a class="nav-link" routerLink="Registro">Registrarse</a>
+          </li> -->
+
+          <li class="nav-item" *ngIf="estaLogueado">
+            <a class="nav-link" routerLink="MisTurnos">Turnos</a>
           </li>
+
           <button class="btn btn-primary" routerLink="Login" *ngIf="!estaLogueado"><b>Login</b></button> 
           <li class="nav-item" *ngIf="estaLogueado">
             <a class="nav-link" >|</a>
           </li>
           <li class="nav-item" *ngIf="estaLogueado">
-            <a class="nav-link" style="color: rgb(146,199,85);" >usuario.nombreUsuario</a>
+            <a class="nav-link" style="color: rgb(146,199,85);" >{{nombreUsuario}}</a>
           </li>
           <button class="btn btn-primary" (click)="logout()" *ngIf="estaLogueado"><b>Logout</b></button> 
         </ul>

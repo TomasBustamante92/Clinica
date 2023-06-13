@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
 
   estaLogueado = false;
   tipoUsuario = "";
+  nombreUsuario:string;
   usuario:any;
 
   constructor(private elementRef: ElementRef, private usuarioService:UsuariosService) {}
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
     this.usuarioService.getEstaLogueado$().subscribe(esta => {
       this.usuario = this.usuarioService.getUsuario();
       this.cambiarTipoUsuario();
+      this.nombreUsuario = this.usuario.mail;
       this.estaLogueado = esta;
     });
   }

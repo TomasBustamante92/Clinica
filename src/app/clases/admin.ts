@@ -1,5 +1,6 @@
 export class Admin {
 
+    id:string;
     tipo:string
     nombre:string;
     apellido:string;
@@ -9,8 +10,9 @@ export class Admin {
     password:string;
     imagen:string;
 
-    constructor(nombre:string, apellido:string, edad:number, dni:string, 
+    constructor(id:string,nombre:string, apellido:string, edad:number, dni:string, 
     mail:string, password:string, imagen:string){
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.edad = edad;

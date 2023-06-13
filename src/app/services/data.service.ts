@@ -7,6 +7,7 @@ import { Paciente } from '../clases/paciente';
 import { Especialista } from '../clases/especialista';
 import { Admin } from '../clases/admin';
 import { Especialidad } from '../clases/especialidad';
+import { Turno } from '../clases/turno';
 
 @Injectable({
   providedIn: 'root'
@@ -52,9 +53,30 @@ export class DataService {
     return collectionData(col, { idField: 'id'}) as Observable<Admin[]>;
   }
 
+  getTurnosDB(): Observable<Turno[]>{
+    let col = collection(this.firestore, 'turnos');
+    return collectionData(col, { idField: 'id'}) as Observable<Turno[]>;
+  }
+
+  updateTurnos(turno:Turno){
+    let col = collection(this.firestore, 'turnos');
+    const documento = doc(col, turno.id);
+    updateDoc(documento, {
+      estado: turno.estado,
+      comentario: turno.comentario,
+      calificacion: turno.calificacion,
+      encuesta: turno.encuesta,
+    });
+  }
+
   cargarPacienteBD(usuario:Paciente){
     let col = collection(this.firestore, 'pacientes');
     addDoc(col, Object.assign({}, usuario));
+  }
+
+  cargarTurnosBD(turno:Turno){
+    let col = collection(this.firestore, 'turnos');
+    addDoc(col, Object.assign({}, turno));
   }
 
   cargarEspecialistaBD(usuario:Paciente){

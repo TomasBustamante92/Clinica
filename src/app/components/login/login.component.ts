@@ -17,12 +17,22 @@ export class LoginComponent {
   mensajeError = "";
   usuario:any;
   usuarioEncontrado:boolean = false;
+  usuariosAccesoRapido = [{mail: "", pass: "", img: ""},{mail: "", pass: "", img: ""},{mail: "", pass: "", img: ""},{mail: "", pass: "", img: ""},{mail: "", pass: "", img: ""},{mail: "", pass: "", img: ""}];
 
   constructor(private spinner:SpinnerService, private data:DataService, private usuarioService:UsuariosService,
     private router: Router) {}
   
   ngOnInit(): void {
+    this.spinner.llamarSpinner();
     this.usuarioEncontrado = false;
+    this.usuarioService.especialistas$.subscribe(esp => {
+      this.cargarAccesoRapido();
+      this.spinner.detenerSpinner();
+    });
+    if(this.usuarioService.admins != undefined){
+      this.cargarAccesoRapido();
+      this.spinner.detenerSpinner();
+    }
   }
 
   resetearMensajeError(){
@@ -52,20 +62,33 @@ export class LoginComponent {
     return null;
   }
 
-  ingresadoRapido(tipo:string){
-    if(tipo == "Paciente"){
-      this.mail = this.usuarioService.pacientes[3].mail;
-      this.password = this.usuarioService.pacientes[3].password;
-    }
-    else if(tipo == "Especialista"){
-      this.mail = this.usuarioService.especialistas[0].mail;
-      this.password = this.usuarioService.especialistas[0].password;
-    }
-    else{
-      this.mail = this.usuarioService.admins[0].mail;
-      this.password = this.usuarioService.admins[0].password;
-    }
+  ingresadoRapido(numeroBoton:number){
+
+    this.cargarAccesoRapido();
+    this.mail = this.usuariosAccesoRapido[numeroBoton].mail;
+    this.password = this.usuariosAccesoRapido[numeroBoton].pass;
     this.ingresarUsuario();
+  }
+
+  cargarAccesoRapido(){
+    for(let i=0 ; i<6 ; i++){
+      if(i<3){
+        this.usuariosAccesoRapido[i].mail = this.usuarioService.pacientes[i].mail;
+        this.usuariosAccesoRapido[i].pass = this.usuarioService.pacientes[i].password;
+        this.usuariosAccesoRapido[i].img = this.usuarioService.pacientes[i].imagenes[0];
+      }
+      else if(i<5){
+        this.usuariosAccesoRapido[i].mail = this.usuarioService.especialistas[i-3].mail;
+        this.usuariosAccesoRapido[i].pass = this.usuarioService.especialistas[i-3].password;
+        this.usuariosAccesoRapido[i].img = this.usuarioService.especialistas[i-3].imagen;
+      }
+      else{
+        
+        this.usuariosAccesoRapido[i].mail = this.usuarioService.admins[i-5].mail;
+        this.usuariosAccesoRapido[i].pass = this.usuarioService.admins[i-5].password;
+        this.usuariosAccesoRapido[i].img = this.usuarioService.admins[i-5].imagen;
+      }
+    }
   }
 
   ingresarAuth(){

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+declare var window: any;
 
 @Component({
   selector: 'app-home',
@@ -10,6 +11,9 @@ export class HomeComponent implements OnInit{
   
   usuario:any;
   estaLogueado:boolean = false;
+  
+  // Form
+  formModal: any;
 
   constructor(private usuarioService:UsuariosService){}
   
@@ -19,6 +23,9 @@ export class HomeComponent implements OnInit{
     this.usuarioService.getEstaLogueado$().subscribe(esta => {
       this.estaLogueado = esta;
     });
+    this.formModal = new window.bootstrap.Modal(
+      document.getElementById('colorModal')
+    );
   }
 
   ngAfterViewInit() {
@@ -33,5 +40,14 @@ export class HomeComponent implements OnInit{
     else{
       this.estaLogueado = false;
     }
+  }
+
+  abrirModulo(tipo:string){
+    this.usuarioService.setTipoRegistro$(tipo);
+    this.formModal.show();
+  }
+
+  cerrarModulo(){
+    this.formModal.hide();
   }
 }

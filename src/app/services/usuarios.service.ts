@@ -18,22 +18,32 @@ export class UsuariosService {
   especialistas$ : Subject<Especialista[]>;
   especialistas:Especialista[];
   admins:Admin[];
+  tipoRegistro$:Subject<string>;
 
   constructor(private httpClient:HttpClient, private data:DataService) {
     this.estaLogueado$ = new Subject();
     this.estaLogueado$.next(false);
     this.especialistas$ = new Subject();
-
+    this.tipoRegistro$ = new Subject();
+    this.tipoRegistro$.next("");
     this.data.getPacientesDB().subscribe(pacientes => {
       this.pacientes = pacientes;
+    });
+    this.data.getAdminDB().subscribe(admins => {
+      this.admins = admins;
     });
     this.data.getEspecialistasDB().subscribe(especialistas => {
       this.especialistas = especialistas;
       this.especialistas$.next(especialistas);
     });
-    this.data.getAdminDB().subscribe(admins => {
-      this.admins = admins;
-    });
+  }
+
+  setTipoRegistro$(value:string){
+    this.tipoRegistro$.next(value);
+  }
+
+  getTipoRegistro$(): Observable<string> {
+    return this.tipoRegistro$;
   }
 
   setEstaLogueado$(value:boolean){
@@ -85,30 +95,20 @@ export class UsuariosService {
     return usuario;
   }
 
-  estaPacienteEnBaseDeDatos(usuario:Paciente){
+  estaUsuarioEnBaseDeDatos(mail:string){
     let retorno = false;
     this.pacientes.forEach(paciente => {
-      if(paciente.mail == usuario.mail){
+      if(paciente.mail == mail){
         retorno = true;
       }
     });
-    return retorno;
-  }
-
-  estaEspecialistaEnBaseDeDatos(usuario:Especialista){
-    let retorno = false;
     this.especialistas.forEach(especialista => {
-      if(especialista.mail == usuario.mail){
+      if(especialista.mail == mail){
         retorno = true;
       }
     });
-    return retorno;
-  }
-
-  estaAdminEnBaseDeDatos(usuario:Admin){
-    let retorno = false;
     this.admins.forEach(admin => {
-      if(admin.mail == usuario.mail){
+      if(admin.mail == mail){
         retorno = true;
       }
     });
