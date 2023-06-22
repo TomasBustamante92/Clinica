@@ -16,6 +16,7 @@ export class UsuariosService {
   tipoUsuario = "";
   pacientes:Paciente[];
   especialistas$ : Subject<Especialista[]>;
+  pacientes$ : Subject<Paciente[]>;
   especialistas:Especialista[];
   admins:Admin[];
   tipoRegistro$:Subject<string>;
@@ -24,10 +25,12 @@ export class UsuariosService {
     this.estaLogueado$ = new Subject();
     this.estaLogueado$.next(false);
     this.especialistas$ = new Subject();
+    this.pacientes$ = new Subject();
     this.tipoRegistro$ = new Subject();
     this.tipoRegistro$.next("");
     this.data.getPacientesDB().subscribe(pacientes => {
       this.pacientes = pacientes;
+      this.pacientes$.next(pacientes);
     });
     this.data.getAdminDB().subscribe(admins => {
       this.admins = admins;
@@ -61,6 +64,14 @@ export class UsuariosService {
 
   getEspecialistas$(): Observable<Especialista[]> {
     return this.especialistas$;
+  }
+
+  setPacientes$(value:Paciente[]){
+    this.pacientes$.next(value);
+  }
+
+  getPacientes$(): Observable<Paciente[]> {
+    return this.pacientes$;
   }
 
   registrarUsuario(tipoUsuario:string, usuario:any){    
@@ -130,12 +141,4 @@ export class UsuariosService {
     this.usuarioLogueado = false;
     this.tipoUsuario = "";
   }
-
-  // getMensajes(): Observable<Mensaje[]>{
-  //   return collectionData(this.mensajesDB) as Observable<Mensaje[]>;
-  // }
-
-  // cargarChat(){
-  //   addDoc(this.mensajesDB, Object.assign({}, {msj:"apa"}));
-  // }
 }

@@ -9,27 +9,37 @@
          <div class="form-floating mb-3" *ngIf="etapa == 'especialidad'">
          <h4>Especialidad</h4>
          <div *ngFor="let esp of especialidades">
-            <button class="btn btn-primary" (click)="elegirEspecialidad(esp)">{{esp}}</button> 
-            <br><br>
+            <div class="container">
+               <button *ngIf="esp == 'Gatos'" class="imagenBoton"><img class="imagenBoton sombrita" src="https://img.freepik.com/premium-vector/cute-cat-vector-illustration_175152-337.jpg?w=2000" height="100px" width="100px" alt="Italian Trulli"></button>
+               <button *ngIf="esp == 'Humanoides'" class="imagenBoton"><img class="imagenBoton sombrita" src="https://img.freepik.com/free-vector/robot-android-female-realistic-3d-composition-humanoid-robot-with-feminine-body-blank_1284-28636.jpg?w=2000" height="100px" width="100px" alt="Italian Trulli"></button>
+               <button *ngIf="esp == 'Super Humanos'" class="imagenBoton"><img class="imagenBoton sombrita" src="https://thumbs.dreamstime.com/b/isometric-people-super-worker-businessman-manager-superhero-vector-illustration-isolated-white-background-138645686.jpg" height="100px" width="100px" alt="Italian Trulli"></button>
+               <button *ngIf="esp == 'Humanos'" class="imagenBoton"><img class="imagenBoton sombrita" src="https://as1.ftcdn.net/v2/jpg/01/38/47/26/1000_F_138472608_KoSY2hnDYslVKUpKGM2vvvkRiKyL7tXI.jpg" height="100px" width="100px" alt="Italian Trulli"></button>
+               <div class="overlay imagenBoton">
+                  <div (click)="elegirEspecialidad(esp)" class="text">{{esp}}</div>
+               </div>
+               </div>
          </div>
+         <p *ngIf="especialidades.length == 0"><br>No se encuentran especialistas con esta especialidad <br>Elija otra por favor</p>
          <br><br>
          <div style="text-align: right;">
-            <button class="btn btn-warning" (click)="volver('home')" >Volver al Home</button> 
+            <button class="btn btn-warning" (click)="volver('especialista')">Volver</button> 
          </div>
          </div>
         <!-- Dropdown especialidades-->
 
          <!-- Dropdown especialistas -->
          <div class="form-floating mb-3" *ngIf="etapa == 'especialista'">
-         <h4>Especialidad</h4>
+         <h4>Especialista</h4>
          <div *ngFor="let esp of especialistas">
-            <button class="btn btn-primary" (click)="elegirEspecialista(esp.nombre, esp.apellido)">{{esp.nombre + ' ' + esp.apellido}}</button> 
-            <br><br>
+            <div class="container">
+            <button class="imagenBoton"><img class="imagenBoton sombrita" src="{{esp.imagen}}" height="100px" width="100px" alt="Italian Trulli"></button>
+            <div class="overlay imagenBoton">
+               <div (click)="elegirEspecialista(esp.nombre, esp.apellido)" class="text">{{esp.nombre + ' ' + esp.apellido}}</div>
+            </div>
+            </div>
          </div>
-         <p *ngIf="especialistas.length == 0"><br>No se encuentran especialistas con esta especialidad <br>Elija otra por favor</p>
-         <br><br>
          <div style="text-align: right;">
-            <button class="btn btn-warning" (click)="volver('especialidad')" >Volver</button> 
+            <button class="btn btn-warning" (click)="volver('home')">Volver al Home</button> 
          </div>
          </div>
          <!-- Dropdown especialistas-->
@@ -46,12 +56,11 @@
                <br>
                <div class="table">
                   <h4 style="text-align: center; color:black;">Horarios disponibles</h4>
-                  <div class="list-group bg-light">
-                        <button type="button" class="list-group-item btn btn-primary"  
-                        *ngFor="let horario of horariosDisponibles" (click)="elegirHorario(horario)">{{horario}}</button>
+                  <div *ngFor="let horario of horariosDisponiblesOtroFormato; let i=index">
+                     <button type="button" class="horarioBoton" (click)="elegirHorario(horario)">{{horario}}</button>
                   </div>
                </div>
-               <button class="btn btn-warning" (click)="volver('especialista')" >Volver</button> 
+               <button class="btn btn-warning" (click)="volver('especialidad')">Volver</button> 
             </div>
          </div>
          <!-- HORARIOS DISPONIBLES -->

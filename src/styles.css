@@ -19,3 +19,8 @@ div{
 .white{
     color: azure;
 }
+
+main{
+    text-align: center;
+    position: relative;
+}

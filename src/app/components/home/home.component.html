@@ -1,7 +1,7 @@
 
 
 <!-- PopUp -->
-<div class="modal fade" id="colorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="regisModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content text-bg-dark" style="text-align: center;">
         <app-registro></app-registro>
@@ -34,7 +34,7 @@
         <img src="https://centerforpainrelief.com/wp-content/uploads/2022/06/doc-gif-transparent.gif" height="600px" alt="Italian Trulli">
         <h1>Bienvenido</h1>
         <br>
-        <button class="btn btn-primary" routerLink="SolicitarTurno">Solicitar Turno</button>
+        <button *ngIf="tipo != 'Especialista'" class="btn btn-primary" routerLink="SolicitarTurno">Solicitar Turno</button>
         <br>
         <br>
     </div>

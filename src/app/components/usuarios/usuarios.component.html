@@ -25,6 +25,10 @@
                 <i *ngIf="!especialista.habilitado" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{especialista.mail}}</i>
                 <span *ngIf="especialista.habilitado">{{especialista.mail}}</span>
             </button>  
+            <button type="button" class="list-group-item btn btn-secondary" (click)="elegirPaciente(paciente)"
+            *ngFor="let paciente of pacientes">
+            <span>{{paciente.mail}}</span>
+        </button>  
             </div>
         </div>
         <div class="col-md-8 order-md-2">
@@ -36,41 +40,56 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="edad">Nombre</label>
-                    <input name="nombre" [(ngModel)]="especialista.nombre" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'especialista'" name="nombre" [(ngModel)]="especialista.nombre" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'paciente'" name="nombre" [(ngModel)]="paciente.nombre" [readonly]="true" class="form-control"/>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="apellido">Apellido</label>
-                    <input name="apellido" [(ngModel)]="especialista.apellido" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'especialista'" name="apellido" [(ngModel)]="especialista.apellido" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'paciente'" name="apellido" [(ngModel)]="paciente.apellido" [readonly]="true" class="form-control"/>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="mail">Mail</label>
-                <input name="mail" [(ngModel)]="especialista.mail" [readonly]="true" class="form-control"/>
+                <input *ngIf="usuarioVisible == 'especialista'" name="mail" [(ngModel)]="especialista.mail" [readonly]="true" class="form-control"/>
+                <input *ngIf="usuarioVisible == 'paciente'" name="mail" [(ngModel)]="paciente.mail" [readonly]="true" class="form-control"/>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="edad">Edad</label>
-                    <input name="edad" [(ngModel)]="especialista.edad" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'especialista'" name="edad" [(ngModel)]="especialista.edad" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'paciente'" name="edad" [(ngModel)]="paciente.edad" [readonly]="true" class="form-control"/>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="dni">Dni</label>
-                    <input name="dni" [(ngModel)]="especialista.dni" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'especialista'" name="dni" [(ngModel)]="especialista.dni" [readonly]="true" class="form-control"/>
+                    <input *ngIf="usuarioVisible == 'paciente'" name="dni" [(ngModel)]="paciente.dni" [readonly]="true" class="form-control"/>
                 </div>
             </div>
-            <label for="dni">Especialidades</label>
-            <div class="list-group bg-light">
+            <label *ngIf="usuarioVisible == 'especialista'" for="dni">Especialidades</label>
+            <div *ngIf="usuarioVisible == 'especialista'" class="list-group bg-light">
                 <br>
                 <p style="text-align: center;" *ngFor="let especialidades of especialista.especialidades">
                     {{especialidades}}
                 </p>
             </div>
-            <div class="mb-3">
+            <div *ngIf="usuarioVisible == 'paciente'" class="mb-3">
+                <label for="obraSocial">Obra Social</label>
+                <input name="obraSocial" [(ngModel)]="paciente.obraSocial" [readonly]="true" class="form-control"/>
+            </div>
+            <div *ngIf="usuarioVisible == 'paciente'">
                 <br>
-                <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': especialista.habilitado, 'btn-secondary': !especialista.habilitado}"(click)="seleccionarEspecialidad(true)">Habilitado</button>
-                <button class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': !especialista.habilitado, 'btn-secondary': especialista.habilitado}" (click)="seleccionarEspecialidad(false)">Inhabilitado</button>        
+                <button class="w-100 btn btn-primary" routerLink="../Historia" [state]="{ mail: paciente.mail }">Historia Clinica</button> 
+            </div>
+            <div *ngIf="usuarioVisible == 'especialista'" class="mb-3">
+                <br>
+                <button *ngIf="especialista.mail != ''" class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': especialista.habilitado, 'btn-secondary': !especialista.habilitado}"(click)="seleccionarEspecialidad(true)">Habilitado</button>
+                <button *ngIf="especialista.mail != ''" class="w-50 mb-2 btn btn-lg rounded-3" [ngClass]="{'btn-success': !especialista.habilitado, 'btn-secondary': especialista.habilitado}" (click)="seleccionarEspecialidad(false)">Inhabilitado</button>        
              </div>
              <br>
-             <img *ngIf="especialista.imagen != ''" [ngClass]="{'inhabilitado': !especialista.habilitado}" src="{{especialista.imagen}}" alt="image" class="imagen">
+             <img *ngIf="usuarioVisible == 'especialista' && especialista.imagen != ''" [ngClass]="{'inhabilitado': !especialista.habilitado}" src="{{especialista.imagen}}" alt="image" class="imagen">
+             <img *ngIf="usuarioVisible == 'paciente' && paciente.imagenes[0] != ''" src="{{paciente.imagenes[0]}}" alt="image" class="imagen">
+
             <!-- /////// -->
             
         </div>

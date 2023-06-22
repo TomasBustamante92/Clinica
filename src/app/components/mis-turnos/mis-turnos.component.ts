@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Especialidad } from 'src/app/clases/especialidad';
 import { Especialista } from 'src/app/clases/especialista';
+import { HistoriaClinica } from 'src/app/clases/historia-clinica';
 import { Paciente } from 'src/app/clases/paciente';
 import { Turno } from 'src/app/clases/turno';
 import { DataService } from 'src/app/services/data.service';
@@ -27,6 +28,7 @@ export class MisTurnosComponent implements OnInit{
   especialidad:string;
   estado:string = "";  
   comentario = "";
+  calificacion = "";
 
   // Filtro
   especialistas:Especialista[] = [];
@@ -39,6 +41,17 @@ export class MisTurnosComponent implements OnInit{
   mensajeError = "";
   estrellas:number = 0;
 
+  // historia
+  altura:string = "";
+  peso:number = 0;
+  temperatura:number = 0;
+  presion:number = 0;
+  dinamicos: {clave: string, valor: string}[] = [];
+  cantidadDatos = 0;
+
+  // ENCUESTA
+  preguntas:string[] = ["","",""];
+    
   constructor(private usuarioService:UsuariosService, private data:DataService , private spinner:SpinnerService){}
 
   ngOnInit(): void {
@@ -54,15 +67,20 @@ export class MisTurnosComponent implements OnInit{
       this.especialistas = this.usuarioService.especialistas;
       this.pacientes = this.usuarioService.pacientes;
       this.turnos = [];
-      turnos.forEach(turno => {
-        this.usuario = this.usuarioService.getUsuario();
-        if(this.usuario.tipo == "Paciente" && turno.paciente == this.usuario.mail){
-          this.turnos.push(turno);
-        }
-        else if(this.usuario.tipo == "Especialista" && turno.especialista == this.usuario.mail){
-          this.turnos.push(turno);
-        }
-      });
+      this.usuario = this.usuarioService.getUsuario();
+      if(this.usuario.tipo != "Admin"){
+        turnos.forEach(turno => {
+          if(this.usuario.tipo == "Paciente" && turno.paciente == this.usuario.mail){
+            this.turnos.push(turno);
+          }
+          else if(this.usuario.tipo == "Especialista" && turno.especialista == this.usuario.mail){
+            this.turnos.push(turno);
+          }
+        });
+      }
+      else{
+        this.turnos = turnos;
+      }
       this.ordernarListaTurnos();
       this.spinner.detenerSpinner();
       this.turnosFiltrados = this.turnos;
@@ -73,17 +91,29 @@ export class MisTurnosComponent implements OnInit{
     });
   }
 
-  verTurno(especialista:string){
-    this.turnos.forEach(turno => {
-      if(turno.especialista == especialista){
-        this.turnoElegido = turno;
-        this.fechaAux = turno.hora + "Hs " + turno.dia + " " + turno.mes + " " + turno.anio;
-        this.especialidad = turno.especialidad;
-        this.buscarEspecialista(turno.especialista);
-        this.estado = turno.estado;
-        this.comentario = turno.comentario;
+  verTurno(turno:Turno){
+    this.turnos.forEach(tur => {
+      if(tur.especialista == turno.especialista && tur.dia == turno.dia && tur.mes == turno.mes && tur.anio == turno.anio){
+        this.turnoElegido = tur;
+        this.fechaAux = tur.hora + "Hs " + tur.dia + " " + tur.mes + " " + tur.anio;
+        this.especialidad = tur.especialidad;
+        this.buscarEspecialista(tur.especialista);
+        this.estado = tur.estado;
+        this.comentario = tur.comentario;
+        this.calificacion = tur.calificacion;
       }
     });
+  }
+
+  agregarValorDinamico(valor:string){
+    if(valor == 'sumar' && this.cantidadDatos < 3){
+      this.cantidadDatos++;
+      this.dinamicos.push({clave: "", valor: ""});
+    }
+    else if(valor == 'restar' && this.cantidadDatos > 0){
+      this.cantidadDatos--;
+      this.dinamicos.splice(-1);
+    }
   }
 
   calificar(estrellas:number){
@@ -142,25 +172,54 @@ export class MisTurnosComponent implements OnInit{
     });
   }
 
-  cancelarTurno(){
+  // agregar metodo cuando se clickea finalizar, cree el objeto con los datos, valide que esten todos completos y cargue el turno y el historial
+  finalizarTurno(){
+    if(this.comentario == "" || this.altura == "" || this.peso == 0 || this.temperatura == 0 || this.presion == 0){
+      this.mensajeError = "Complete los campos";
+    }
+    else{
+      this.estado = "finalizado";
+      this.turnoElegido.estado = "finalizado";
+      this.turnoElegido.comentario = this.comentario;
+      this.data.updateTurnos(this.turnoElegido);
+      this.comentario == "";
+      this.altura == "";
+      this.peso == 0;
+      this.temperatura == 0;
+      this.presion == 0
+      this.data.cargarHistoriasBD(new HistoriaClinica("",this.turnoElegido.paciente,this.turnoElegido.especialista,this.dinamicos,this.altura,
+        this.peso,this.temperatura.toString(),this.presion.toString()));
+      this.cerrarPopUp();
+    }
+  }
+
+  modificarTurno(estado:string){
     if(this.comentario == ""){
       this.mensajeError = "Complete el comentario";
     }
     else{
-      this.turnoElegido.estado = "cancelado";
+      this.estado = estado;
+      this.turnoElegido.estado = estado;
       this.turnoElegido.comentario = this.comentario;
       this.data.updateTurnos(this.turnoElegido);
       this.cerrarPopUp();
     }
   }
 
+  modificarTurnoSinComentario(estado:string){
+    this.estado = estado;
+    this.turnoElegido.estado = estado;
+    this.turnoElegido.comentario = this.comentario;
+    this.data.updateTurnos(this.turnoElegido);
+    this.cerrarPopUp();
+  }
+
   calificarTurno(){
-    console.log(this.comentario)
-    if(this.comentario == ""){
+    if(this.calificacion == ""){
       this.mensajeError = "Complete el comentario";
     }
     else{
-      this.turnoElegido.comentario = this.comentario;
+      this.turnoElegido.calificacion = this.calificacion;
       this.data.updateTurnos(this.turnoElegido);
       this.cerrarPopUp();
     }

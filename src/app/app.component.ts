@@ -1,11 +1,18 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { DataService } from './services/data.service';
 import { UsuariosService } from './services/usuarios.service';
+import { RouterOutlet } from '@angular/router';
+import { fader,slider } from './route-animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [ 
+    // fader,
+    slider,
+    // transformer,
+  ]
+
 })
 export class AppComponent implements OnInit {
 
@@ -31,6 +38,10 @@ export class AppComponent implements OnInit {
         .body.style.backgroundColor = "transparent";
     this.usuario = this.usuarioService.getUsuario();
     this.cambiarEstado();
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 
   cambiarTipoUsuario(){

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Especialista } from 'src/app/clases/especialista';
+import { HorarioEspecialista } from 'src/app/clases/horario-especialista';
 import { Turno } from 'src/app/clases/turno';
 import { DataService } from 'src/app/services/data.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
@@ -29,20 +30,26 @@ export class SolicitarTurnoComponent implements OnInit{
   horarios:string[] = ["8:00","8:30","9:00","9:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30",
     "16:00","16:30","17:00","17:30","18:00","18:30"];
   horariosDisponibles:string[] = [];
+  horariosDisponiblesOtroFormato:string[] = [];
 
   // DOM
-  etapa = "especialidad";
+  etapa = "especialista";
 
-  // MOSTRAR SOLO HORARIOS DISPONIBLEEEEEEEEES
+  // TURNOS
+  turnos:Turno[] = [];
+
   // Especialidades
   especialidades:string[] = [];
   especialidadElegida = "";
-  especialistasTodos:Especialista[] = [];
   especialistas:Especialista[] = [];
   especialistaElegido:Especialista;
   especialistaElegidoStr = "";
   diaElegido = "";
   horarioElegido = "";
+
+  // HORARIOS
+  horariosEspecialistas:HorarioEspecialista[] = [];
+
 
   constructor(private data:DataService, private spinner:SpinnerService, private usuarioService:UsuariosService, private router: Router){}
   
@@ -50,37 +57,29 @@ export class SolicitarTurnoComponent implements OnInit{
     this.spinner.llamarSpinner();
     this.data.getEspecialidades().subscribe(esp => {
       this.spinner.detenerSpinner();
-      this.especialidades = [];
-      esp.forEach(e => {
-        this.especialidades.push(e.nombre);
-      });
       this.ordernarListaEspecialidades();
-      this.especialistasTodos = [];
+      this.especialistas = [];
       this.usuarioService.especialistas.forEach(esp => {
-        this.especialistasTodos.push(esp);
+        this.especialistas.push(esp);
       });
+    });
+    this.data.getHorarioEspecialistas().subscribe(horario => {
+      this.horariosEspecialistas = horario;
+    });
+    this.data.getTurnosDB().subscribe(turnos => {
+      this.turnos = turnos;
     });
   }
 
   elegirEspecialidad(esp:string){
     this.especialidadElegida = esp;
-    this.especialistasTodos.forEach((especialista) => {
-      especialista.especialidades.forEach(especialidad => {
-        if(especialidad == esp){
-          this.especialistas.push(especialista);
-        }
-      });
-    });
-    this.volver("especialista");
+    this.volver("horario");
   }
 
-  cargarEspecialistas(){
-
-  }
 
   elegirHorario(horario:string){
-    this.horarioElegido = horario;
-    this.diaElegido = horario + " Hrs. " + this.diaString + " " + this.dia + " de " + this.mes;
+    this.horarioElegido = this.volverCambiarFormato(horario);
+    this.diaElegido = this.horarioElegido + " Hrs. " + this.diaString + " " + this.dia + " de " + this.mes;
     this.volver("confirmar");
   }
 
@@ -95,14 +94,129 @@ export class SolicitarTurnoComponent implements OnInit{
     this.especialistas.forEach((esp, index) => {
       if(esp.nombre == nombre && esp.apellido == apellido){
         indice = index;
+        this.especialidades = esp.especialidades;
       }
     });
     this.especialistaElegido = this.especialistas[indice];
     this.especialistaElegidoStr = this.especialistaElegido.nombre + " " + this.especialistaElegido.apellido;
 
-    // VER LOS HORARIOS EN RELACION AL ESPECIALISTA
-    this.horariosDisponibles = this.horarios
-    this.volver('horario');
+    this.cambiarHorariosPorEspecialista();
+    this.volver('especialidad');
+  }
+
+  cambiarHorariosPorEspecialista(){
+    let indiceIni = 0;
+    let indiceFin = 0;
+    if(this.diaString == "Sabado"){
+      indiceFin = 12;
+    }
+    else{
+      indiceFin = this.horarios.length;
+    }
+    this.horariosEspecialistas.forEach(horEsp => {
+      if(horEsp.mail == this.especialistaElegido.mail){
+        this.horarios.forEach((horarios,index) => {
+          switch(this.diaString){
+            case "Lunes":
+              if(horarios == horEsp.lunInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.lunFin){
+                indiceFin = index;
+              }
+              break;
+            case "Martes":
+              if(horarios == horEsp.marInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.marFin){
+                indiceFin = index;
+              }
+              break;
+            case "Miercoles":
+              if(horarios == horEsp.mierInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.mierFin){
+                indiceFin = index;
+              }
+              break;
+            case "Jueves":
+              if(horarios == horEsp.jueInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.jueFin){
+                indiceFin = index;
+              }
+              break;
+            case "Viernes":
+              if(horarios == horEsp.vierInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.vierFin){
+                indiceFin = index;
+              }
+              break;
+            case "Sabado":
+              if(horarios == horEsp.sabInicio){
+                indiceIni = index;
+              }
+              if(horarios == horEsp.sabFin){
+                indiceFin = index;
+              }
+              break;
+            }
+          });
+        }
+      });
+    let listAux = [...this.horarios];
+    this.horariosDisponibles = listAux.splice(indiceIni,indiceFin-indiceIni);
+    this.sacarHorariosNoDisponibles();
+    this.cambiarFormato();
+  }
+
+  volverCambiarFormato(hora:string){
+    let horaAux = hora.split(" ");
+    let horaAux2 = horaAux[1].split(":");
+    let horaNumber = Number(horaAux2[0]);
+    if(horaAux[2] == "PM"){
+      horaNumber += 12;
+    }
+    return horaNumber + ":" + horaAux2[1]; 
+  }
+
+  cambiarFormato(){
+    this.horariosDisponiblesOtroFormato = [];
+    this.horariosDisponibles.forEach(horario => {
+      this.horariosDisponiblesOtroFormato.push(this.anio+'-'+this.mesNumero+'-'+this.dia+' '+this.cambiarHoraAmPm(horario));
+    });
+  }
+
+  cambiarHoraAmPm(hora:string){
+    let strAux = hora.split(":");
+    let horaAux = strAux[0];
+    let minAux = strAux[1];
+    if(Number(strAux[0]) > 12){
+      horaAux = String(Number(strAux[0])-12);
+      return horaAux + ":" + minAux + " PM";
+    }
+    return horaAux + ":" + minAux + " AM";
+  }
+
+  sacarHorariosNoDisponibles(){
+    let indices = [];
+    let listAux = [...this.horariosDisponibles];
+    this.turnos.forEach(turno => {
+      this.horariosDisponibles.forEach((horarios,index) => {
+        if(turno.especialista == this.especialistaElegido.mail && turno.dia == this.dia && turno.hora == horarios){
+          indices.push(index);
+        }
+      });
+    })
+    indices.forEach(i => {
+      listAux.splice(i,1);
+      this.horariosDisponibles = listAux;
+    });
   }
 
   volver(lugar:string){
@@ -160,20 +274,22 @@ export class SolicitarTurnoComponent implements OnInit{
       this.diaString = this.diaSemanaString(this.now.getDay());
       this.anio = this.now.getFullYear().toString();
       this.getHorariosDisponibles();
+      this.cambiarHorariosPorEspecialista();
     }
   }
 
-  cargarEspecialidades(){
-
-  }
 
   limitarFecha(sumarOrestar:string){
+    let dia = this.hoy.getDate();
+    if(this.hoy.getDate()+15 > 30){
+      dia = this.hoy.getDate() - 15; 
+    }
     if(sumarOrestar == "restar" && (this.hoy.getDate() == this.now.getDate())){
       this.restarDia = false;
       this.sumarDia = true;
       return false;
     }
-    else if(sumarOrestar == "sumar" && (this.hoy.getDate() + 15 == this.now.getDate())){
+    else if(sumarOrestar == "sumar" && (dia == this.now.getDate())){
       this.restarDia = true;
       this.sumarDia = false;
       return false;

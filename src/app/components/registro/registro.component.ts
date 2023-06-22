@@ -6,6 +6,7 @@ import { DataService } from 'src/app/services/data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { Especialidad } from 'src/app/clases/especialidad';
+import { HorarioEspecialista } from 'src/app/clases/horario-especialista';
 declare var window: any;
 
 @Component({
@@ -219,8 +220,12 @@ export class RegistroComponent implements OnInit{
     .then(responseRegistro => {
       this.usuarioService.registrarUsuario(this.tipoUsuario, this.usuario);
       this.spinner.detenerSpinner();
-      if(this.tipoUsuario != "Admin"){
+      if(this.tipoUsuario == "Paciente"){
         this.mandarMail(responseRegistro);
+      }
+      else if(this.tipoUsuario == "Especialista"){
+        this.mandarMail(responseRegistro);
+        this.cargarHorarioEspecialistas(this.mail);
       }
       else{
         this.verificarMail();
@@ -238,6 +243,11 @@ export class RegistroComponent implements OnInit{
         this.mensajeError = error;
       }
     });
+  }
+
+  cargarHorarioEspecialistas(mail:string){
+    let horarioAux = new HorarioEspecialista("",mail);
+    this.data.cargarHorarioEspecialistas(horarioAux);
   }
 
   mandarMail(responseRegistro:any){

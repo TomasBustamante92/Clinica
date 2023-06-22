@@ -11,6 +11,7 @@ export class HomeComponent implements OnInit{
   
   usuario:any;
   estaLogueado:boolean = false;
+  tipo = "";
   
   // Form
   formModal: any;
@@ -18,14 +19,15 @@ export class HomeComponent implements OnInit{
   constructor(private usuarioService:UsuariosService){}
   
   ngOnInit(): void {
+    this.formModal = new window.bootstrap.Modal(
+      document.getElementById('regisModal')
+    );
     this.usuario = this.usuarioService.getUsuario();
+    this.tipo = this.usuario.tipo;
     this.cambiarEstado();
     this.usuarioService.getEstaLogueado$().subscribe(esta => {
       this.estaLogueado = esta;
     });
-    this.formModal = new window.bootstrap.Modal(
-      document.getElementById('colorModal')
-    );
   }
 
   ngAfterViewInit() {
@@ -42,7 +44,7 @@ export class HomeComponent implements OnInit{
     }
   }
 
-  abrirModulo(tipo:string){
+  abrirModulo(tipo:string){ 
     this.usuarioService.setTipoRegistro$(tipo);
     this.formModal.show();
   }

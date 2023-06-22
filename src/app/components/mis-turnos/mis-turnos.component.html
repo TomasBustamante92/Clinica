@@ -13,17 +13,32 @@
                 <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
                 <br>
                 <p style="color: red;">{{mensajeError}}</p>
-                <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="cancelarTurno()">Cancelar turno</button> 
+                <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="modificarTurno('cancelado')">Cancelar turno</button> 
                 <br>
                 <br>
             </div>
             <!-- cancelar -->
 
+            <!-- rechazar -->
+            <div *ngIf="popUpRazon == 'rechazar'">
+                <br>
+                <h1>Rechazar turno</h1>
+                <br>
+                <label class="form-label" for="textAreaExample">Comentario</label>
+                <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                <br>
+                <p style="color: red;">{{mensajeError}}</p>
+                <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="modificarTurno('rechazado')">Rechazar turno</button> 
+                <br>
+                <br>
+            </div>
+            <!-- rechazar -->
+
             <!-- reseña -->
             <div *ngIf="popUpRazon == 'reseña'">
                 <br>
                 <h1>Reseña</h1>
-                {{comentario}}
+                {{calificacion}}
                 <br>
                 <br>
                 <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="cerrarPopUp()">Cerrar</button> 
@@ -31,6 +46,59 @@
                 <br>
             </div>
             <!-- reseña -->
+
+            <!-- finalizado -->
+            <div *ngIf="popUpRazon == 'finalizado'">
+                <br>
+                <h1>Finalizado</h1>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="altura">Altura</label>
+                        <input name="altura" [(ngModel)]="altura" class="form-control"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="peso">Peso</label>
+                        <input name="peso" [(ngModel)]="peso" class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="temperatura">Temperatura</label>
+                        <input name="temperatura" [(ngModel)]="temperatura" class="form-control"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="presion">Presion</label>
+                        <input name="presion" [(ngModel)]="presion" class="form-control"/>
+                    </div>
+                </div>
+                <h4>Datos Dinamicos</h4>
+                <div class="row" *ngFor="let item of [].constructor(cantidadDatos); let i=index">
+                    <div class="col-md-6 mb-3">
+                        <label for="temperatura">Clave</label>
+                        <input name="temperatura" placeholder="Ej: caries" [(ngModel)]="dinamicos[i].clave" class="form-control"/>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="presion">Valor</label>
+                        <input name="presion" placeholder="Ej: 4" [(ngModel)]="dinamicos[i].valor" class="form-control"/>
+                    </div>
+                </div>
+                <div>
+                    <button *ngIf="cantidadDatos > 0" class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="agregarValorDinamico('restar')">Restar dato</button>
+                    <button *ngIf="cantidadDatos < 3" class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="agregarValorDinamico('sumar')">Agregar dato</button>
+                </div>
+                <br>
+                <label class="form-label" for="textAreaExample">Comentario</label>
+                <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                <br>
+                <p style="color: red;">{{mensajeError}}</p>
+                <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="finalizarTurno()">Finalizar turno</button>
+                <br>
+                <br>
+                <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="cerrarPopUp()">Cerrar</button> 
+                <br>
+                <br>
+            </div>
+            <!-- finalizado -->
 
             <!-- Calificar -->
             <div *ngIf="popUpRazon == 'calificar'">
@@ -46,7 +114,7 @@
                 </div>
                 <div>
                     <label class="form-label" for="textAreaExample">Comentario</label>
-                    <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                    <textarea [(ngModel)]="calificacion" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
                     <br>
                     <p style="color: red;">{{mensajeError}}</p>
                     <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="calificarTurno()">Calificar</button> 
@@ -61,15 +129,15 @@
             <br>
             <h1>Encuesta</h1>
             <label for="fecha">¿Porque el cielo es azul?</label>
-            <input name="mail" [(ngModel)]="fechaAux" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
+            <input name="mail" [(ngModel)]="preguntas[0]" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
             <br>
             <label for="fecha">¿Porque los pajaros vuelan?</label>
-            <input name="mail" [(ngModel)]="fechaAux" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
+            <input name="mail" [(ngModel)]="preguntas[1]" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
             <br>
             <label for="fecha">¿Volveria?</label>
-            <input name="mail" [(ngModel)]="fechaAux" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
+            <input name="mail" [(ngModel)]="preguntas[2]" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
             <br>
-            <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="calificarTurno()">Completar encuesta</button> 
+            <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="cerrarPopUp()">Completar encuesta</button> 
             <p style="color: red;">{{mensajeError}}</p>
             <br>
             <br>
@@ -100,7 +168,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-6 col-md-4" style="padding-left: 50px;" *ngIf="usuario.tipo == 'Paciente'">
+            <div class="col-sm-6 col-md-4" style="padding-left: 50px;" *ngIf="usuario.tipo != 'Especialista'">
                 <div class="form-check">
                     <h4>Especialistas</h4>
                     <div style="padding-left: 30px;" *ngFor="let esp of especialistas">
@@ -148,11 +216,10 @@
             <br>        
             <h1 class="text-center" style="color: black">Turnos</h1>
             <div class="list-group bg-light">
-                <button type="button" class="list-group-item btn btn-secondary" (click)="verTurno(turno.especialista)"
+                <button type="button" class="list-group-item btn btn-secondary" (click)="verTurno(turno)"
                 *ngFor="let turno of turnosFiltrados">
                 <i *ngIf="turno.estado == 'pendiente'" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</i>
-                <span *ngIf="turno.estado == 'cancelado'" [ngStyle]="{'color': 'red'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
-                <span *ngIf="turno.estado == 'rechazado'" [ngStyle]="{'color': 'red'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
+                <span *ngIf="turno.estado == 'cancelado' || turno.estado == 'rechazado'" [ngStyle]="{'color': 'red'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
                 <span *ngIf="turno.estado == 'aceptado'">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
                 <span *ngIf="turno.estado == 'finalizado'" [ngStyle]="{'color': 'green'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
             </button> 
@@ -185,21 +252,36 @@
             <div class="mb-3">
                 <label for="fecha">Estado</label>
                 <br>
-                <button class="w-100 btn notButton" [ngClass]="{'btn-secondary': estado == 'pendiente','btn-danger': estado == 'cancelado'}">{{estado}}</button> 
+                <button class="w-100 btn notButton" [ngClass]="{'btn-secondary': estado == 'pendiente','btn-danger': estado == 'cancelado' || estado == 'rechazado', 'btn-primary': estado == 'aceptado'}">{{estado}}</button> 
             </div>
             <br><br><br>
             <!-- Botones Paciente -->
             <div style="text-align: center;" *ngIf="usuario.tipo == 'Paciente'">
                 <button *ngIf="estado != 'finalizado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('cancelar')">Cancelar turno</button> 
-                <br>
                 <button *ngIf="comentario != ''" (click)="abrirPopUp('reseña')" class="w-50 btn btn-primary">Ver reseña</button> 
-                <br>
                 <button *ngIf="estado == 'finalizado'" (click)="abrirPopUp('calificar')" class="w-50 btn btn-primary"> Calificar atención</button> 
+                <button *ngIf="comentario != '' && estado == 'finalizado'" (click)="abrirPopUp('encuesta')" class="w-50 btn btn-primary">Completar encuesta</button> 
                 <br>
-                <!-- *ngIf="comentario != '' && estado == 'finalizado'" -->
-                <button  (click)="abrirPopUp('encuesta')" class="w-50 btn btn-primary">Completar encuesta</button> 
             </div>
             <!-- Botones Paciente -->
+
+            <!-- Botones Especialista -->
+            <div style="text-align: center;" *ngIf="usuario.tipo == 'Especialista'">
+                <button *ngIf="estado != 'aceptado' && estado != 'rechazado' && estado != 'finalizado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-primary" (click)="modificarTurnoSinComentario('aceptado')">Aceptar turno</button> 
+                <button *ngIf="estado == 'aceptado'" class="w-50 btn btn-success" (click)="abrirPopUp('finalizado')">Finalizar turno</button> 
+                <button *ngIf="estado != 'aceptado' && estado != 'rechazado' && estado != 'finalizado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('rechazar')">Rechazar turno</button> 
+                <button *ngIf="estado != 'aceptado' && estado != 'rechazado' && estado != 'finalizado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('cancelar')">Cancelar turno</button> 
+                <button *ngIf="comentario != ''" (click)="abrirPopUp('reseña')" class="w-50 btn btn-primary">Ver reseña</button> 
+                <br>
+            </div>
+            <!-- Botones Especialista -->
+
+            <!-- Botones Admin -->
+            <div style="text-align: center;" *ngIf="usuario.tipo == 'Admin'">
+                <button *ngIf="estado != 'aceptado' && estado != 'finalizado' && estado != 'rechazado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('cancelar')">Cancelar turno</button> 
+                <br>
+            </div>
+            <!-- Botones Admin -->
         </div>
         <!-- Detalles -->
 

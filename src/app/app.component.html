@@ -23,6 +23,10 @@
           <li class="nav-item" *ngIf="tipoUsuario == 'Admin'">
             <a class="nav-link" routerLink="Usuarios">Usuarios</a>
           </li>
+
+          <li class="nav-item" *ngIf="tipoUsuario == 'Especialista'">
+            <a class="nav-link" routerLink="Pacientes">Pacientes</a>
+          </li>
           
           <!-- <li class="nav-item" *ngIf="!estaLogueado">
             <a class="nav-link" routerLink="Registro">Registrarse</a>
@@ -59,4 +63,6 @@
 </ngx-spinner>
 <!--Spinner-->
 
-<router-outlet></router-outlet>
+<div [@routeAnimations]="prepareRoute(outlet)" >
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>

@@ -12,13 +12,15 @@ import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-
 import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
 
 const routes: Routes = [
-  {path: "", component: HomeComponent},
-  {path: "Login", component: LoginComponent},
+  {path: "", component: HomeComponent,  data: { animation: 'isLeft' }},
+  {path: "Login", component: LoginComponent, data: { animation: 'isRight' }},
   {path: "Usuarios", component: UsuariosComponent, canActivate: [OnlyAdminsGuard]},
   {path: "Registro", component: RegistroComponent},
   {path: "MiPerfil", component: MiPerfilComponent},
   {path: "SolicitarTurno", component: SolicitarTurnoComponent},
   {path: "MisTurnos", component: MisTurnosComponent},
+  {path: 'Historia', loadChildren: () => import('./historia/historia.module').then(m => m.HistoriaModule)},
+  {path: 'Pacientes', loadChildren: () => import('./components/pacientes-del-especialista/pacientes-del-especialista.module').then(m => m.PacientesDelEspecialistaModule)},
   {path: "**", component: ErrorComponent}
 ];
 
