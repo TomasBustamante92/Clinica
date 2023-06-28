@@ -44,6 +44,38 @@ export class PacientesDelEspecialistaComponent implements OnInit{
     }
   }
 
+  getFechas(paciente:string){
+    let turnosAux = [];
+    this.turnos.forEach(t => {
+      if(t.paciente == paciente && t.fecha != ""){
+        turnosAux.push(t.fecha);
+      }
+    });
+    turnosAux = this.ordenarFechas([...turnosAux]);
+    
+    return turnosAux;
+  }
+
+  ordenarFechas(turnosAux:string[]){
+    return turnosAux.sort((n1,n2) => {
+      if(n1 == n2){
+        return 0;
+      }
+      let n1Split = n1.split("/");
+      let n2Split = n2.split("/");
+      if(n1Split[2] > n2Split[2]){
+        return -1;
+      }
+      else if(n1Split[2] == n2Split[2] && n1Split[1] > n2Split[1]){
+        return -1;
+      }
+      else if(n1Split[2] == n2Split[2] && n1Split[1] == n2Split[1] && n1Split[0] > n2Split[0]){
+        return -1;
+      }
+      return 1;
+    });
+  }
+
   cargarPacientes(){
     this.turnos.forEach(turno => {
       this.pacientesTodos.forEach(paciente => {

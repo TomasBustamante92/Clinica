@@ -7,11 +7,18 @@
             <br>
             <br>        
             <h1 class="text-center" style="color: black">Especialistas</h1>
-            <div class="list-group bg-light">
-                <button type="button" class="list-group-item btn btn-secondary" (click)="elegirPaciente(paciente)"
-                *ngFor="let paciente of pacientes">
-                <span>{{paciente.mail}}</span>
-                </button>  
+            <div *ngFor="let paciente of pacientes">
+                <div class="card tarjeta" style="width: 18rem;">
+                    <div class="card-body" (click)="elegirPaciente(paciente)" style="text-align: center;">
+                      <h5 class="card-title">{{paciente.mail}}</h5>
+                      <u>Ultimos turnos</u>
+                      <div *ngFor="let fecha of getFechas(paciente.mail)">
+                        {{fecha}}
+                      </div>
+                      <button class="w-100 btn btn-primary" routerLink="../Historia" [state]="{ mail: paciente.mail }">Historia Clinica</button> 
+                    </div>
+                  </div>
+                  <br>
             </div>
         </div>
         <div class="col-md-8 order-md-2">
@@ -50,7 +57,7 @@
             </div>
             <div>
                 <br>
-                <button class="w-100 btn btn-primary" routerLink="../Historia" [state]="{ mail: paciente.mail }">Historia Clinica</button> 
+                <button *ngIf="paciente.imagenes[0] != ''" class="w-100 btn btn-primary" routerLink="../Historia" [state]="{ mail: paciente.mail }">Historia Clinica</button> 
             </div>
              <br>
              <img *ngIf="paciente.imagenes[0] != ''" src="{{paciente.imagenes[0]}}" alt="image" class="imagen">

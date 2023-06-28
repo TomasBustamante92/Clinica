@@ -31,7 +31,8 @@ import {
 
 export const slider =
   trigger('routeAnimations', [
-    transition('* => isLeft', fade() ),
+    transition('* => fade', fade() ),
+    transition('* => isLeft', slideTo('left') ),
     transition('* => isRight', slideTo('right') ),
   ]);
 

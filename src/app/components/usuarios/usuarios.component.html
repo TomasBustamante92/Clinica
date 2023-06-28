@@ -14,21 +14,27 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4 order-md-1 mb-4">
-
             <br>
             <br>        
-            <h1 class="text-center" style="color: black">Especialistas</h1>
+            <h1 class="text-center" style="color: black">Usuarios</h1>
+            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-success" (click)="exportExcel()">Generar Excel</button>
             <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" (click)="abrirModulo()">Nuevo</button>
-            <div class="list-group bg-light">
-                <button type="button" class="list-group-item btn btn-secondary" (click)="elegirEspecialista(especialista)"
-                *ngFor="let especialista of especialistas">
-                <i *ngIf="!especialista.habilitado" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{especialista.mail}}</i>
-                <span *ngIf="especialista.habilitado">{{especialista.mail}}</span>
-            </button>  
-            <button type="button" class="list-group-item btn btn-secondary" (click)="elegirPaciente(paciente)"
-            *ngFor="let paciente of pacientes">
-            <span>{{paciente.mail}}</span>
-        </button>  
+            <div *ngFor="let especialista of especialistas">
+                <div class="w-100 card tarjeta" style="width: 18rem;">
+                    <div class="card-body" (click)="elegirEspecialista(especialista)" style="text-align: center;">
+                        <i *ngIf="!especialista.habilitado" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{especialista.mail}}</i>
+                        <span *ngIf="especialista.habilitado">{{especialista.mail}}</span>
+                    </div>
+                </div>
+                <br>
+            </div>
+            <div *ngFor="let paciente of pacientes">
+                <div class="w-100 card tarjeta" style="width: 18rem;">
+                    <div class="card-body" (click)="elegirPaciente(paciente)" style="text-align: center;">
+                        <span>{{paciente.mail}}</span>
+                    </div>
+                </div>
+                <br>
             </div>
         </div>
         <div class="col-md-8 order-md-2">
@@ -95,3 +101,69 @@
         </div>
     </div>
 </div>
+
+<div hidden="true" style=" margin: auto; width: 50%;">
+    <table id="excel-table">
+        <tr>
+            <th>Tipo</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Mail</th>
+            <th>Edad</th>
+            <th>DNI</th>
+            <th>Especialidad</th>
+            <th>Obra Social</th>
+            <th>Imagen</th>
+        </tr>
+        <tr *ngFor="let item of especialistas">
+            <td>{{item.tipo}}</td>
+            <td>{{item.nombre}}</td>
+            <td>{{item.apellido}}</td>
+            <td>{{item.mail}}</td>
+            <td>{{item.edad}}</td>
+            <td>{{item.dni}}</td>
+            <td>{{item.especialidades[0]}}</td>
+            <td></td>
+            <td>{{item.imagen}}</td>
+        </tr>
+        <tr *ngFor="let item of pacientes">
+            <td>{{item.tipo}}</td>
+            <td>{{item.nombre}}</td>
+            <td>{{item.apellido}}</td>
+            <td>{{item.mail}}</td>
+            <td>{{item.edad}}</td>
+            <td>{{item.dni}}</td>
+            <td></td>
+            <td>{{item.obraSocial}}</td>
+            <td>{{item.imagenes[0]}}</td>
+        </tr>
+    </table>
+  </div>
+
+   <!-- TURNOS -->
+  <div hidden="true" style=" margin: auto; width: 50%;">
+    <table id="tableTurnos">
+        <tr>
+            <th>paciente</th>
+            <th>especialista</th>
+            <th>Especialidad</th>
+            <th>fecha</th>
+        </tr>
+        <div *ngFor="let item of turnos">
+            <tr *ngIf="usuarioVisible == 'especialista' && item.especialista == especialista.mail">
+                <td>{{item.paciente}}</td>
+                <td>{{item.especialista}}</td>
+                <td>{{item.especialidad}}</td>
+                <td>{{item.fecha}}</td>
+                <td></td>
+            </tr>
+            <tr *ngIf="usuarioVisible == 'paciente' && item.paciente == paciente.mail">
+                <td>{{item.paciente}}</td>
+                <td>{{item.especialista}}</td>
+                <td>{{item.especialidad}}</td>
+                <td>{{item.fecha}}</td>
+                <td></td>
+            </tr>
+        </div>
+    </table>
+  </div>

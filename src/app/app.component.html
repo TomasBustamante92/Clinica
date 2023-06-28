@@ -27,6 +27,10 @@
           <li class="nav-item" *ngIf="tipoUsuario == 'Especialista'">
             <a class="nav-link" routerLink="Pacientes">Pacientes</a>
           </li>
+
+          <li class="nav-item" *ngIf="tipoUsuario == 'Admin'">
+            <a class="nav-link" routerLink="Estadisticas">Estadisticas</a>
+          </li>
           
           <!-- <li class="nav-item" *ngIf="!estaLogueado">
             <a class="nav-link" routerLink="Registro">Registrarse</a>

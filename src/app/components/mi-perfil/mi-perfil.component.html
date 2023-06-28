@@ -6,33 +6,56 @@
             <br>
             <h1>Disponibilidad Horaria</h1>
             <br>
-            <div style="margin: 0 auto; float: none;" class="w-75 row" *ngFor="let dias of diasDisponibles">
+            <div style="margin: 0 auto; float: none;" class="w-75 row" *ngFor="let dias of diasDisponibles; let i=index">
                 <label for="inicio">{{dias.dia}}</label>
-                <div class="col-md-6 mb-3">
-                    <div class="form-floating mb-3">
-                        <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [autoClose]="false">
-                        <button id="button-basic" dropdownToggle type="button" 
+                <div class="col-md-3 mb-3">
+                    <button (click)="cambiarEstado(dias.dia, disponibilidades[i])" [ngClass]="{'btn-success': disponibilidades[i] == 'Habilitado', 'btn-danger': disponibilidades[i] == 'Inhabilitado'}" class="btn">{{disponibilidades[i]}}</button>
+                </div>
+                <div class="col-md-3 mb-3" [ngStyle]="disponibilidades[i] != 'Habilitado'?{opacity: .3} : {opacity: 1}">
+                    <div   class="form-floating mb-3">
+                        <div  class="btn-group w-100" dropdown #dropdown="bs-dropdown" dropdownToggle [autoClose]="false">
+                        <button id="horarioInicio{{i}}"  type="button"
                             class="btn btn-lg btn-secondary dropdown-toggle"
-                            aria-controls="dropdown-basic">{{dias.ini}}<span class="caret"></span>
+                            aria-controls="dropdown-basic" >{{dias.ini}}<span class="caret"></span>
                         </button>
+                        <div *ngIf="disponibilidades[i] == 'Habilitado'">
                         <ul id="dropdown-basic" *dropdownMenu style="text-align: center;" class="dropdown-menu w-100"
                             role="menu" aria-labelledby="button-basic">
-                            <button (click)="cambiarHorario(dias.dia,'inicio',esp)" dropdownToggle *ngFor="let esp of horariosDisponibles" class="dropdown-item">{{esp}}</button>
-                        </ul>
+                                <button (click)="cambiarHorario(dias.dia,'inicio',esp)" dropdownToggle *ngFor="let esp of horariosDisponibles" class="dropdown-item">{{esp}}</button>
+                            </ul>
+                        </div>
                     </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-3 mb-3" [ngStyle]="disponibilidades[i] != 'Habilitado'?{opacity: .3} : {opacity: 1}">
                     <div class="form-floating mb-3">
                         <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [autoClose]="false">
                         <button id="button-basic" dropdownToggle type="button" 
                             class="btn btn-lg btn-secondary dropdown-toggle"
                             aria-controls="dropdown-basic">{{dias.fin}}<span class="caret"></span>
                         </button>
+                        <div *ngIf="disponibilidades[i] == 'Habilitado'">
                         <ul id="dropdown-basic" *dropdownMenu style="text-align: center;" class="dropdown-menu w-100"
                             role="menu" aria-labelledby="button-basic">
                             <button (click)="cambiarHorario(dias.dia,'fin',esp)" dropdownToggle *ngFor="let esp of horariosDisponibles" class="dropdown-item">{{esp}}</button>
                         </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3" [ngStyle]="disponibilidades[i] != 'Habilitado'?{opacity: .3} : {opacity: 1}">
+                    <div class="form-floating mb-3">
+                        <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [autoClose]="false">
+                        <button id="button-basic2" dropdownToggle type="button" 
+                            class="btn btn-lg btn-secondary dropdown-toggle"
+                            aria-controls="dropdown-basic">{{especialidadesPorDia[i]}}<span class="caret"></span>
+                        </button>
+                        <div *ngIf="disponibilidades[i] == 'Habilitado'">
+                        <ul id="dropdown-basic" *dropdownMenu style="text-align: center;" class="dropdown-menu w-100"
+                            role="menu" aria-labelledby="button-basic">
+                            <button (click)="cambiarEspecialidad(dias.dia,espe)" dropdownToggle *ngFor="let espe of usuario.especialidades" class="dropdown-item">{{espe}}</button>
+                        </ul>
+                        </div>
                     </div>
                     </div>
                 </div>
@@ -44,6 +67,31 @@
     </div>
 </div>
 <!-- PopUp -->
+<!-- PopUp filtrar pdf-->
+<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content text-bg-dark" style="text-align: center;">
+            <br>
+            <h1>Filtrar PDF por especialidad</h1>
+            <br>
+            <div>
+            <input (click)="seleccionarEspecialidad('')" class="form-check-input" type="radio" name="pdfFlex" id="pdfFlex" checked>
+            <label class="form-check-label" for="pdfFlex">
+                Ninguna
+            </label>
+            </div>
+            <div *ngFor="let esp of especialidadesDisponibles">
+                <input (click)="seleccionarEspecialidad(esp)" class="form-check-input" type="radio" name="pdfFlex" id="pdfFlex">
+                <label class="form-check-label" for="pdfFlex">
+                {{esp}}
+                </label>
+            </div>
+            <br>
+            <button style="margin: 0 auto; float: none;" class="btn btn-primary" (click)="imprimirPdf()">Crear</button>             
+        </div>
+    </div>
+</div>
+<!-- PopUp filtrar pdf -->
 
 <div style="text-align: center;">
     <br>
@@ -56,7 +104,7 @@
     <div>
         <button *ngIf="tipo == 'Paciente'" class="btn btn-primary" routerLink="../Historia" [state]="{ mail: mail }">Historia Clinica</button> 
     </div>
-    <button *ngIf="tipo == 'Paciente'" class="btn btn-danger" (click)="imprimirPdf()">Imprimir PDF</button>
+    <button *ngIf="tipo == 'Paciente'" class="btn btn-danger" (click)="abrirPopUpFiltrarPdf()">Imprimir PDF</button>
     <br>
     <br>
     Mail

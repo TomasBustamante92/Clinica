@@ -5,6 +5,7 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 import { PdfMakeWrapper, Img, Txt } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { HistoriaClinica } from 'src/app/clases/historia-clinica';
+import { Especialista } from 'src/app/clases/especialista';
 declare var window: any;
 
 @Component({
@@ -23,8 +24,13 @@ export class MiPerfilComponent implements OnInit{
   imagenes:string[] = ["",""];
   tipo:string;
   obraSocial:string;
-  especialidades:string[];
+  especialidades:string[] = [];
+  especialidadesDisponibles:string[] = [];
+  especialidadesPorDia:string[] = [];
   formModal: any;
+  formModalPdf: any;
+  disponibilidades = ["","","","","",""];
+  especialidadPDFseleccionada = "";
 
   diasDisponibles = [{dia:"Lunes", ini: "", fin: ""},{dia:"Martes", ini: "", fin: ""},{dia:"Miercoles", ini: "", fin: ""},
     {dia:"Jueves", ini: "", fin: ""},{dia:"Viernes", ini: "", fin: ""},{dia:"Sabado", ini: "", fin: ""}];
@@ -37,6 +43,9 @@ export class MiPerfilComponent implements OnInit{
     this.formModal = new window.bootstrap.Modal(
       document.getElementById('MiModal')
     );
+    this.formModalPdf = new window.bootstrap.Modal(
+      document.getElementById('pdfModal')
+    );
     this.usuarioService.getEstaLogueado$().subscribe(esta => {
       this.usuario = this.usuarioService.getUsuario();
     });
@@ -44,8 +53,16 @@ export class MiPerfilComponent implements OnInit{
       horario.forEach(hor => {
         if(this.usuario.mail == hor.mail){
           this.horariosEspecialista = hor;
+          this.disponibilidades = this.horariosEspecialista.estados;
+          this.especialidadesPorDia = this.horariosEspecialista.especialidadesPorDia;
           this.cargarHorarios(hor);
         }
+      });
+    });
+    this.data.getEspecialidades().subscribe(esp => {
+      this.especialidadesDisponibles = [];
+      esp.forEach(e => {
+        this.especialidadesDisponibles.push(e.nombre);
       });
     });
   }
@@ -70,9 +87,17 @@ export class MiPerfilComponent implements OnInit{
     this.diasDisponibles[5].fin = horario.sabFin;
   }
 
-  async imprimirPdf(){
-    PdfMakeWrapper.setFonts(pdfFonts);
+  abrirPopUpFiltrarPdf(){
+    this.formModalPdf.show();
+  }
 
+  seleccionarEspecialidad(esp:string){
+    this.especialidadPDFseleccionada = esp;
+  }
+
+  async imprimirPdf(){
+    this.formModalPdf.hide();
+    PdfMakeWrapper.setFonts(pdfFonts);
     const pdf = new PdfMakeWrapper();
     const logo = await (new Img('https://cdn-icons-png.flaticon.com/512/197/197881.png').absolutePosition(30,20).fit([40,40]).build());
 
@@ -86,11 +111,12 @@ export class MiPerfilComponent implements OnInit{
     pdf.add("\n\n");
 
     this.data.historias.forEach(historia => {
-      if(historia.paciente == this.usuario.mail){
+      if(historia.paciente == this.usuario.mail && (this.especialidadPDFseleccionada == "" || this.especialidadPDFseleccionada == historia.especialidad)){
         pdf.add("Altura: " + historia.altura);
         pdf.add("Peso: " + historia.peso);
         pdf.add("Temperatura: " + historia.temperatura);
         pdf.add("Presion: " + historia.presion);
+        pdf.add("Especialidad: " + historia.especialidad);
         historia.dinamicos.forEach(dinamico => {
           pdf.add(dinamico.clave + ": " + dinamico.valor);
         });
@@ -99,6 +125,7 @@ export class MiPerfilComponent implements OnInit{
     });
     // pdf.create().download("archivoRePiola");
     pdf.create().open();
+    this.especialidadPDFseleccionada = "";
   }
 
   cambiarHorario(dia:string,tipo:string,horario:string){
@@ -148,6 +175,58 @@ export class MiPerfilComponent implements OnInit{
     }
   }
 
+  cambiarEstado(dia:string, estadoAnterior:string){
+    if(estadoAnterior == "Habilitado"){
+      estadoAnterior = "Inhabilitado";
+    }
+    else{
+      estadoAnterior = "Habilitado";
+    }
+    switch(dia){
+      case "Lunes":
+        this.horariosEspecialista.estados[0] = estadoAnterior;
+        break;
+      case "Martes":
+        this.horariosEspecialista.estados[1] = estadoAnterior;
+        break;
+      case "Miercoles":
+        this.horariosEspecialista.estados[2] = estadoAnterior;
+        break;
+      case "Jueves":
+        this.horariosEspecialista.estados[3] = estadoAnterior;
+        break;
+      case "Viernes":
+        this.horariosEspecialista.estados[4] = estadoAnterior;
+        break;
+      case "Sabado":
+        this.horariosEspecialista.estados[5] = estadoAnterior;
+        break;
+    }
+  }
+
+  cambiarEspecialidad(dia:string,especialidad:string){
+    switch(dia){
+      case "Lunes":
+        this.especialidadesPorDia[0] = especialidad;
+        break;
+      case "Martes":
+        this.especialidadesPorDia[1] = especialidad;
+        break;
+      case "Miercoles":
+        this.especialidadesPorDia[2] = especialidad;
+        break;
+      case "Jueves":
+        this.especialidadesPorDia[3] = especialidad;
+        break;
+      case "Viernes":
+        this.especialidadesPorDia[4] = especialidad;
+        break;
+      case "Sabado":
+        this.especialidadesPorDia[5] = especialidad;
+        break;
+    }
+  }
+
   completarCampos(){
     this.mail = this.usuario.mail;
     this.nombreCompleto = this.usuario.nombre + " " + this.usuario.apellido;
@@ -161,6 +240,8 @@ export class MiPerfilComponent implements OnInit{
     }
     else if(this.tipo == 'Especialista'){
       this.especialidades = this.usuario.especialidades;
+      // this.especialidadesAux = [this.especialidades[0],this.especialidades[0],
+      //   this.especialidades[0],this.especialidades[0],this.especialidades[0],this.especialidades[0]];
       this.imagenes[0] = this.usuario.imagen;
     }
     else{
@@ -170,7 +251,6 @@ export class MiPerfilComponent implements OnInit{
 
   abrirMisHorarios(){
     this.formModal.show();
-
   }
 
   actualizarHorarioEspecialista(){

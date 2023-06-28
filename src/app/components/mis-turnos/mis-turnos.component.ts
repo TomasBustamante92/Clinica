@@ -19,21 +19,27 @@ export class MisTurnosComponent implements OnInit{
 
   usuario:any;
   turnos:Turno[] = [];
-  turnosFiltrados:Turno[] = [];
-  turnosFiltrados$:Subject<Turno[]>;
+  // turnosFiltrados:Turno[] = [];
+  // turnosFiltrados$:Subject<Turno[]>;
   turnoElegido:Turno;
   fechaAux:string;
   especialistaNombreCompleto = "";
+  pacienteNombreCompleto = "";
   especialista:Especialista;
   especialidad:string;
   estado:string = "";  
+  comentarioAux = "";
   comentario = "";
+  reseniaAux = "";
+  resenia = "";
   calificacion = "";
+  tipo = "";
 
   // Filtro
   especialistas:Especialista[] = [];
   especialidades:Especialidad[] = [];
   pacientes:Paciente[] = [];
+  filtro = "";
 
   // Popup
   formModal: any;
@@ -55,7 +61,7 @@ export class MisTurnosComponent implements OnInit{
   constructor(private usuarioService:UsuariosService, private data:DataService , private spinner:SpinnerService){}
 
   ngOnInit(): void {
-    this.turnosFiltrados$ = new Subject();
+    // this.turnosFiltrados$ = new Subject();
     this.spinner.llamarSpinner();
     this.formModal = new window.bootstrap.Modal(
       document.getElementById('cancelarTurno')
@@ -68,6 +74,7 @@ export class MisTurnosComponent implements OnInit{
       this.pacientes = this.usuarioService.pacientes;
       this.turnos = [];
       this.usuario = this.usuarioService.getUsuario();
+      this.tipo = this.usuario.tipo;
       if(this.usuario.tipo != "Admin"){
         turnos.forEach(turno => {
           if(this.usuario.tipo == "Paciente" && turno.paciente == this.usuario.mail){
@@ -83,21 +90,23 @@ export class MisTurnosComponent implements OnInit{
       }
       this.ordernarListaTurnos();
       this.spinner.detenerSpinner();
-      this.turnosFiltrados = this.turnos;
-      this.turnosFiltrados$.next(this.turnos);
+      // this.turnosFiltrados = this.turnos;
+      // this.turnosFiltrados$.next(this.turnos);
     });
-    this.turnosFiltrados$.subscribe(turnos => {
-      this.turnosFiltrados = turnos;
-    });
+    // this.turnosFiltrados$.subscribe(turnos => {
+    //   this.turnosFiltrados = turnos;
+    // });
   }
 
   verTurno(turno:Turno){
     this.turnos.forEach(tur => {
-      if(tur.especialista == turno.especialista && tur.dia == turno.dia && tur.mes == turno.mes && tur.anio == turno.anio){
+      if(tur.especialista == turno.especialista && tur.dia == turno.dia && tur.mes == turno.mes && tur.anio == turno.anio && tur.hora == turno.hora &&
+        tur.especialidad == turno.especialidad){
         this.turnoElegido = tur;
         this.fechaAux = tur.hora + "Hs " + tur.dia + " " + tur.mes + " " + tur.anio;
         this.especialidad = tur.especialidad;
         this.buscarEspecialista(tur.especialista);
+        this.buscarPaciente(tur.paciente);
         this.estado = tur.estado;
         this.comentario = tur.comentario;
         this.calificacion = tur.calificacion;
@@ -120,24 +129,24 @@ export class MisTurnosComponent implements OnInit{
     this.estrellas = estrellas;
   }
 
-  filtarTurnos(filtro:string, tipo:string){
-    this.turnosFiltrados = [];
-    this.turnos.forEach(turno => {
-      if(filtro == 'sinFiltro'){
-        this.turnosFiltrados.push(turno);
-      }
-      else if(tipo == "especialidades" && turno.especialidad == filtro){
-        this.turnosFiltrados.push(turno);
-      }
-      else if(tipo == "especialistas" && turno.especialista == filtro){
-        this.turnosFiltrados.push(turno);
-      }
-      else if(tipo == "pacientes" && turno.paciente == filtro){
-        this.turnosFiltrados.push(turno);
-      }
-    });
-    this.turnosFiltrados$.next(this.turnosFiltrados);
-  }
+  // filtarTurnos(filtro:string, tipo:string){
+  //   this.turnosFiltrados = [];
+  //   this.turnos.forEach(turno => {
+  //     if(filtro == 'sinFiltro'){
+  //       this.turnosFiltrados.push(turno);
+  //     }
+  //     else if(tipo == "especialidades" && turno.especialidad == filtro){
+  //       this.turnosFiltrados.push(turno);
+  //     }
+  //     else if(tipo == "especialistas" && turno.especialista == filtro){
+  //       this.turnosFiltrados.push(turno);
+  //     }
+  //     else if(tipo == "pacientes" && turno.paciente == filtro){
+  //       this.turnosFiltrados.push(turno);
+  //     }
+  //   });
+  //   this.turnosFiltrados$.next(this.turnosFiltrados);
+  // }
 
   abrirPopUp(razon:string){
     this.popUpRazon = razon;
@@ -148,11 +157,29 @@ export class MisTurnosComponent implements OnInit{
     this.formModal.hide();
   }
 
+  completarResenia(){
+    this.resenia = this.reseniaAux;
+    this.cerrarPopUp();
+  }
+
+  completarComentario(){
+    this.comentario = this.comentarioAux;
+    this.cerrarPopUp();
+  }
+
   buscarEspecialista(mail:string){
     this.usuarioService.especialistas.forEach(esp => {
       if(esp.mail == mail){
         this.especialista = esp;
         this.especialistaNombreCompleto = esp.nombre + " " + esp.apellido;
+      }
+    });
+  }
+
+  buscarPaciente(mail:string){
+    this.usuarioService.pacientes.forEach(esp => {
+      if(esp.mail == mail){
+        this.pacienteNombreCompleto = esp.nombre + " " + esp.apellido;
       }
     });
   }
@@ -168,42 +195,59 @@ export class MisTurnosComponent implements OnInit{
       else if(one.anio == two.anio && one.mes == two.mes && one.dia < two.dia){
         return 1;
       }
+      else if(one.anio == two.anio && one.mes == two.mes && one.dia == two.dia && one.hora < two.hora){
+        return 1;
+      }
       return -1;
     });
   }
 
-  // agregar metodo cuando se clickea finalizar, cree el objeto con los datos, valide que esten todos completos y cargue el turno y el historial
   finalizarTurno(){
-    if(this.comentario == "" || this.altura == "" || this.peso == 0 || this.temperatura == 0 || this.presion == 0){
+    if(this.comentarioAux == "" || this.altura == "" || this.peso == 0 || this.temperatura == 0 || this.presion == 0){
       this.mensajeError = "Complete los campos";
     }
     else{
       this.estado = "finalizado";
       this.turnoElegido.estado = "finalizado";
+      this.comentario = this.comentarioAux
       this.turnoElegido.comentario = this.comentario;
+      let fechar = new Date();
+      this.turnoElegido.fecha = fechar.getDate().toString()+'/'+fechar.getMonth().toString()+'/'+fechar.getFullYear().toString();
       this.data.updateTurnos(this.turnoElegido);
       this.comentario == "";
       this.altura == "";
       this.peso == 0;
       this.temperatura == 0;
-      this.presion == 0
+      this.presion == 0;
       this.data.cargarHistoriasBD(new HistoriaClinica("",this.turnoElegido.paciente,this.turnoElegido.especialista,this.dinamicos,this.altura,
-        this.peso,this.temperatura.toString(),this.presion.toString()));
+        this.peso,this.temperatura.toString(),this.presion.toString(),this.turnoElegido.especialidad));
+      this.limpiarData();
       this.cerrarPopUp();
     }
   }
 
   modificarTurno(estado:string){
-    if(this.comentario == ""){
+    if(this.comentarioAux == ""){
       this.mensajeError = "Complete el comentario";
     }
     else{
       this.estado = estado;
       this.turnoElegido.estado = estado;
+      this.comentario = this.comentarioAux;
       this.turnoElegido.comentario = this.comentario;
+      this.turnoElegido.resenia = this.resenia;
       this.data.updateTurnos(this.turnoElegido);
+      this.limpiarData();
       this.cerrarPopUp();
     }
+  }
+
+  limpiarData(){
+    this.comentarioAux = "";
+    this.comentario = "";
+    this.reseniaAux = "";
+    this.resenia = "";
+    this.calificacion = "";
   }
 
   modificarTurnoSinComentario(estado:string){
@@ -211,6 +255,7 @@ export class MisTurnosComponent implements OnInit{
     this.turnoElegido.estado = estado;
     this.turnoElegido.comentario = this.comentario;
     this.data.updateTurnos(this.turnoElegido);
+    this.limpiarData();
     this.cerrarPopUp();
   }
 
@@ -221,6 +266,7 @@ export class MisTurnosComponent implements OnInit{
     else{
       this.turnoElegido.calificacion = this.calificacion;
       this.data.updateTurnos(this.turnoElegido);
+      this.limpiarData();
       this.cerrarPopUp();
     }
   }

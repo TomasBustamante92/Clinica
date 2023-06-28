@@ -13,3 +13,7 @@
 .inhabilitado{
   opacity: 50%;
 }
+
+.tarjeta:hover {
+  cursor: pointer;
+}

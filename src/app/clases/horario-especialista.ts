@@ -13,9 +13,9 @@ export class HorarioEspecialista {
     vierFin:string;
     sabInicio:string;
     sabFin:string;
+    estados:string[];
+    especialidadesPorDia:string[];
 
-    // ,lunInicio:string,lunFin:string,marInicio:string,marFin:string,mierInicio:string,mierFin:string,
-    // jueInicio:string,jueFin:string,vierInicio:string,vierFin:string,sabInicio:string,sabFin:string
     constructor(id:string,mail:string){
         this.id = id;
         this.mail = mail;
@@ -31,5 +31,7 @@ export class HorarioEspecialista {
         this.vierFin = "19:00";
         this.sabInicio = "8:00";
         this.sabFin = "14:00";
+        this.estados = ["Habilitado","Habilitado","Habilitado","Habilitado","Habilitado","Habilitado"];
+        this.especialidadesPorDia = ["","","","","",""];
     }
 }

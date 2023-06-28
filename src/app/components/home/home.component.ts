@@ -35,6 +35,8 @@ export class HomeComponent implements OnInit{
     this.cambiarEstado();
   }
 
+  
+
   cambiarEstado(){
     if(this.usuario != null){
       this.estaLogueado = true;

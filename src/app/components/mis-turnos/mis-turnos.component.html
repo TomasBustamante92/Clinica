@@ -10,7 +10,7 @@
                 <h1>Cancelar turno</h1>
                 <br>
                 <label class="form-label" for="textAreaExample">Comentario</label>
-                <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                <textarea [(ngModel)]="comentarioAux" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
                 <br>
                 <p style="color: red;">{{mensajeError}}</p>
                 <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="modificarTurno('cancelado')">Cancelar turno</button> 
@@ -25,7 +25,7 @@
                 <h1>Rechazar turno</h1>
                 <br>
                 <label class="form-label" for="textAreaExample">Comentario</label>
-                <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                <textarea [(ngModel)]="comentarioAux" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
                 <br>
                 <p style="color: red;">{{mensajeError}}</p>
                 <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="modificarTurno('rechazado')">Rechazar turno</button> 
@@ -38,7 +38,8 @@
             <div *ngIf="popUpRazon == 'reseña'">
                 <br>
                 <h1>Reseña</h1>
-                {{calificacion}}
+                {{comentario}}
+                {{resenia}}
                 <br>
                 <br>
                 <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="cerrarPopUp()">Cerrar</button> 
@@ -88,7 +89,7 @@
                 </div>
                 <br>
                 <label class="form-label" for="textAreaExample">Comentario</label>
-                <textarea [(ngModel)]="comentario" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
+                <textarea [(ngModel)]="comentarioAux" (ngModelChange)="resetearMensajeError()" style="margin: 0 auto; float: none;" class="form-control w-50" id="textAreaExample1" rows="4"></textarea>
                 <br>
                 <p style="color: red;">{{mensajeError}}</p>
                 <button class="btn btn-secondary" style="margin: 0 auto; float: none;" (click)="finalizarTurno()">Finalizar turno</button>
@@ -128,10 +129,10 @@
             <div *ngIf="popUpRazon == 'encuesta'">
             <br>
             <h1>Encuesta</h1>
-            <label for="fecha">¿Porque el cielo es azul?</label>
+            <label for="fecha">¿Como lo trató el medico?</label>
             <input name="mail" [(ngModel)]="preguntas[0]" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
             <br>
-            <label for="fecha">¿Porque los pajaros vuelan?</label>
+            <label for="fecha">¿En que podriamos mejorar?</label>
             <input name="mail" [(ngModel)]="preguntas[1]" class="w-75 form-control" style="margin: 0 auto; float: none;"/>
             <br>
             <label for="fecha">¿Volveria?</label>
@@ -154,62 +155,14 @@
 <div class="container">
 
     <!-- Filtro -->
-    <div>
-        <div class="modal-content rounded-4 shadow text-bg-dark">
+    <div style="text-align: center;">
         <br>
-        <div class="row">
-            <div class="col-sm-6 col-md-4 form-check">
-                <h1 style="padding-left: 50px;">Filtrar turnos</h1>
-                <div style="padding-left: 100px;">
-                    <input (click)="filtarTurnos('sinFiltro','')" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                    <label class="form-check-label" for="flexRadioDefault2">
-                      Sin filtro
-                    </label>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-md-4" style="padding-left: 50px;" *ngIf="usuario.tipo != 'Especialista'">
-                <div class="form-check">
-                    <h4>Especialistas</h4>
-                    <div style="padding-left: 30px;" *ngFor="let esp of especialistas">
-                        <input (click)="filtarTurnos(esp.mail,'especialistas')" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                          {{esp.nombre}} {{esp.apellido}}
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-md-4" style="padding-left: 50px;" *ngIf="usuario.tipo == 'Especialista'">
-                <div class="form-check">
-                    <h4>Pacientes</h4>
-                    <div style="padding-left: 30px;" *ngFor="let pac of pacientes">
-                        <input (click)="filtarTurnos(pac.mail,'pacientes')" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                          {{pac.nombre}} {{pac.apellido}}
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-6 col-md-4">
-                <h4>Especialidades</h4>
-                <div class="form-check">
-                    <div style="padding-left: 10px;" *ngFor="let esp of especialidades">
-                        <input (click)="filtarTurnos(esp.nombre,'especialidades')" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            {{esp.nombre}}
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
+        <h4 for="fecha">Filtrar</h4>
+        <input name="filtro" [(ngModel)]="filtro" class="form-control"/>
     </div>
     <!-- Filtro -->
 
     <div class="row">
-
         <!-- Lista  -->
         <div class="col-md-4 order-md-1 mb-4">
             <br>
@@ -217,13 +170,13 @@
             <h1 class="text-center" style="color: black">Turnos</h1>
             <div class="list-group bg-light">
                 <button type="button" class="list-group-item btn btn-secondary" (click)="verTurno(turno)"
-                *ngFor="let turno of turnosFiltrados">
-                <i *ngIf="turno.estado == 'pendiente'" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</i>
-                <span *ngIf="turno.estado == 'cancelado' || turno.estado == 'rechazado'" [ngStyle]="{'color': 'red'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
-                <span *ngIf="turno.estado == 'aceptado'">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
-                <span *ngIf="turno.estado == 'finalizado'" [ngStyle]="{'color': 'green'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
-            </button> 
-            <div style="text-align: center;" *ngIf="turnosFiltrados.length == 0">
+                    *ngFor="let turno of turnos | filtrarTurnos:filtro">
+                    <i *ngIf="turno.estado == 'pendiente'" [ngStyle]="{'color': 'rgb(180, 180, 180)'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</i>
+                    <span *ngIf="turno.estado == 'cancelado' || turno.estado == 'rechazado'" [ngStyle]="{'color': 'red'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
+                    <span *ngIf="turno.estado == 'aceptado'">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
+                    <span *ngIf="turno.estado == 'finalizado'" [ngStyle]="{'color': 'green'}">{{turno.especialidad}} - {{turno.dia}} de {{turno.mes}}</span>
+                </button> 
+            <div style="text-align: center;" *ngIf="turnos.length == 0">
                 <br>
                 <p>No se encontró ningun turno</p>
             </div> 
@@ -240,7 +193,11 @@
                 <input name="mail" [(ngModel)]="fechaAux" [readonly]="true" class="form-control"/>
             </div>
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 mb-3" *ngIf="tipo == 'Especialista'">
+                    <label for="fecha">Paciente</label>
+                    <input name="fecha" [(ngModel)]="pacienteNombreCompleto" [readonly]="true" class="form-control"/>
+                </div>
+                <div class="col-md-6 mb-3" *ngIf="tipo == 'Paciente'">
                     <label for="fecha">Especialista</label>
                     <input name="fecha" [(ngModel)]="especialistaNombreCompleto" [readonly]="true" class="form-control"/>
                 </div>
@@ -252,12 +209,12 @@
             <div class="mb-3">
                 <label for="fecha">Estado</label>
                 <br>
-                <button class="w-100 btn notButton" [ngClass]="{'btn-secondary': estado == 'pendiente','btn-danger': estado == 'cancelado' || estado == 'rechazado', 'btn-primary': estado == 'aceptado'}">{{estado}}</button> 
+                <button class="w-100 btn notButton" [ngClass]="{'btn-secondary': estado == 'pendiente','btn-danger': estado == 'cancelado' || estado == 'rechazado', 'btn-primary': estado == 'aceptado', 'btn-success': estado == 'finalizado'}">{{estado}}</button> 
             </div>
             <br><br><br>
             <!-- Botones Paciente -->
             <div style="text-align: center;" *ngIf="usuario.tipo == 'Paciente'">
-                <button *ngIf="estado != 'finalizado' && estado != 'cancelado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('cancelar')">Cancelar turno</button> 
+                <button *ngIf="estado != 'finalizado' && estado != 'cancelado' && estado != 'rechazado' && estado != ''" class="w-50 btn btn-warning" (click)="abrirPopUp('cancelar')">Cancelar turno</button> 
                 <button *ngIf="comentario != ''" (click)="abrirPopUp('reseña')" class="w-50 btn btn-primary">Ver reseña</button> 
                 <button *ngIf="estado == 'finalizado'" (click)="abrirPopUp('calificar')" class="w-50 btn btn-primary"> Calificar atención</button> 
                 <button *ngIf="comentario != '' && estado == 'finalizado'" (click)="abrirPopUp('encuesta')" class="w-50 btn btn-primary">Completar encuesta</button> 

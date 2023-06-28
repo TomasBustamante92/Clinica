@@ -1,0 +1,90 @@
+
+<!-- PopUp -->
+<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="text-align: center; background-color:rgb(19, 43, 71)">
+            <app-calendario *ngIf="this.popUpMomento == 'inicio'" (diaEmitter)="recibiRespuesta($event, 'inicio')"></app-calendario>
+            <app-calendario *ngIf="this.popUpMomento == 'fin'" (diaEmitter)="recibiRespuesta($event, 'fin')"></app-calendario>
+        </div>
+    </div>
+</div>
+<!-- PopUp -->
+
+
+<div class="container" [hidden]="!cargarPdf">
+    <!-- <button class="btn btn-warning" (click)="cambiar(false)">Volver</button> -->
+    <button class="btn btn-danger" [hidden]="!cargarPdf" (click)="imprimirPdf()">Descargar PDF</button>
+    <button style="margin-left: 20px" class="btn btn-success" [hidden]="!cargarPdf" (click)="exportExcel()">Descargar Excel</button>
+    <br><br>
+</div>
+<div id="content" #content class="container" [hidden]="!cargarPdf">
+    <!-- GRAFICOS -->
+    <div class="card-group">
+        <div style="text-align: center;" class="card">
+            <h2>Especialidades</h2>
+            <canvas id="especialidades"></canvas>
+        </div>
+        <p style="color: transparent;">ssssss</p>
+        <div style="text-align: center;" class="card">
+            <h2>Dia</h2>
+            <canvas id="dia"></canvas>
+        </div>
+    </div>
+    <br>
+    <div class="card-group">
+        <div style="text-align: center;" class="card">
+            <h2>Turnos Solicitados<br>{{fechaInicioStr}} - {{fechaFinStr}}</h2>
+            <canvas id="solicitados"></canvas>
+        </div>
+        <p style="color: transparent;">ssssss</p>
+        <div style="text-align: center;" class="card">
+            <h2>Turnos Finalizados<br>{{fechaInicioStr}} - {{fechaFinStr}}</h2>
+            <canvas id="finalizados"></canvas>
+        </div>
+    </div>
+    <!-- GRAFICOS -->
+
+    <br>
+    <table id="logIngresos" class="table" style="text-align: center;">
+    <thead>
+        <tr>
+        <th scope="col">Usuario</th>
+        <th scope="col">Dia</th>
+        <th scope="col">Horario</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of logIngresos">
+        <td>{{item.usuario}}</td>
+        <td>{{item.dia}}</td>
+        <td>{{item.hora}}</td>
+        </tr>
+    </tbody>
+    </table>
+</div> 
+
+<div class="container" [hidden]="cargarPdf">
+    <div style="text-align: center;" class="card">
+        <br>
+        <h2>Estadisticas</h2>
+        <br>
+        <div style="margin: 0 auto; float: none;" class="w-75 row">
+            <div class="col-md-6 mb-3">
+                <button class="btn btn-primary" (click)="abrirPopUp('inicio')">Elegir fecha de inicio</button>
+                <input style="text-align: center;" value="{{diaInicio | diaString}} {{fechaInicioStr}}" name="fechaInicio" [readonly]="true" class="form-control"/>
+            </div>
+            <div class="col-md-6 mb-3">
+                <button class="btn btn-primary" (click)="abrirPopUp('fin')">Elegir fecha de fin</button>
+                <input style="text-align: center;" value="{{diaFin | diaString}} {{fechaFinStr}}" name="fechaFin" [readonly]="true" class="form-control"/>
+            </div>
+            
+        <button style="margin: 0 auto; float: none;" [inhabilitarBoton]="estadoBoton" class="btn btn-primary" (click)="cambiar(true)">ver estadisticas</button>
+        <br>
+        <br>
+    </div>
+    <br>
+    </div> 
+</div> 
+
+  
+

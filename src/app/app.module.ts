@@ -22,6 +22,14 @@ import { NgxCaptchaModule } from 'ngx-captcha';
 import { MiPerfilComponent } from './components/mi-perfil/mi-perfil.component';
 import { SolicitarTurnoComponent } from './components/solicitar-turno/solicitar-turno.component';
 import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component';
+import { ImgHoverDirective } from './directivas/img-hover.directive';
+import { FiltrarTurnosPipe } from './pipes/filtrar-turnos.pipe';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
+import { CalendarioComponent } from './components/calendario/calendario.component';
+import { MesStringPipe } from './pipes/mes-string.pipe';
+import { DiaStringPipe } from './pipes/dia-string.pipe';
+import { InhabilitarBotonDirective } from './directivas/inhabilitar-boton.directive';
+import { HoverColorearDirective } from './directivas/hover-colorear.directive';
 
 @NgModule({
   declarations: [
@@ -34,6 +42,14 @@ import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component
     MiPerfilComponent,
     SolicitarTurnoComponent,
     MisTurnosComponent,
+    ImgHoverDirective,
+    FiltrarTurnosPipe,
+    EstadisticasComponent,
+    CalendarioComponent,
+    MesStringPipe,
+    DiaStringPipe,
+    InhabilitarBotonDirective,
+    HoverColorearDirective,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +63,7 @@ import { MisTurnosComponent } from './components/mis-turnos/mis-turnos.component
     BsDropdownModule,
     provideAuth(() => getAuth()),
     NgxCaptchaModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [DataService, BsDropdownConfig],
   bootstrap: [AppComponent]

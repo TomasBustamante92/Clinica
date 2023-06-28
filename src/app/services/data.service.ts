@@ -10,6 +10,7 @@ import { Especialidad } from '../clases/especialidad';
 import { Turno } from '../clases/turno';
 import { HorarioEspecialista } from '../clases/horario-especialista';
 import { HistoriaClinica } from '../clases/historia-clinica';
+import { LogIngreso } from '../clases/log-ingreso';
 
 @Injectable({
   providedIn: 'root'
@@ -18,10 +19,16 @@ export class DataService {
 
   autha = this.auth;
   historias:HistoriaClinica[] = [];
+  especialidades:string[] = [];
 
   constructor(private httpClient:HttpClient, private firestore: Firestore, private auth:Auth) {
       this.getHistoriaDB().subscribe(historias => {
       this.historias = historias;
+    });
+    this.getEspecialidades().subscribe(esp => {
+      esp.forEach(e => {
+        this.especialidades.push(e.nombre);
+      })
     });
    }
 
@@ -35,7 +42,6 @@ export class DataService {
   ingresar(mail:string,password:string){
     return signInWithEmailAndPassword(this.auth,mail,password);
   }
-
 
   // HORARIO ESPECIALISTAS
   getHorarioEspecialistas(): Observable<HorarioEspecialista[]>{
@@ -62,6 +68,8 @@ export class DataService {
       vierFin: horarioEsp.vierFin,
       sabInicio: horarioEsp.sabInicio,
       sabFin: horarioEsp.sabFin,
+      estados: horarioEsp.estados,
+      especialidadesPorDia: horarioEsp.especialidadesPorDia,
     });
   }
 
@@ -94,6 +102,17 @@ export class DataService {
   }
 
 
+  // LOG INGRESOS
+  getLogIngresos():Observable<LogIngreso[]>{
+    let col = collection(this.firestore, 'logIngresos');
+    return collectionData(col) as Observable<LogIngreso[]>;
+  }
+  cargarLogIngresos(ingresos:LogIngreso){
+    let col = collection(this.firestore, 'logIngresos');
+    addDoc(col, Object.assign({}, ingresos));
+  }
+
+
   // TURNO
   getTurnosDB(): Observable<Turno[]>{
     let col = collection(this.firestore, 'turnos');
@@ -111,6 +130,8 @@ export class DataService {
       comentario: turno.comentario,
       calificacion: turno.calificacion,
       encuesta: turno.encuesta,
+      fecha: turno.fecha,
+      resenia: turno.resenia,
     });
   }
 

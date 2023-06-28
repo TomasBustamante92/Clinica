@@ -9,8 +9,10 @@ export class Turno {
     hora:string;
     estado:string;
     comentario:string;
+    resenia:string;
     encuesta:string; 
     calificacion:string;
+    fecha:string;
 
     constructor(id:string,paciente:string,especialista:string,especialidad:string,dia:string,mes:string,anio:string,hora:string,
     estado:string,comentario:string,encuesta:string,calificacion:string){
@@ -24,7 +26,9 @@ export class Turno {
         this.hora = hora;
         this.estado = estado;
         this.comentario = comentario;
+        this.resenia = "";
         this.encuesta = encuesta; 
         this.calificacion = calificacion;
+        this.fecha = "";
     }
 }

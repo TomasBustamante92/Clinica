@@ -3,6 +3,8 @@ import { DataService } from 'src/app/services/data.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { Router } from '@angular/router';
+import { LogIngreso } from 'src/app/clases/log-ingreso';
+import { min } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -110,6 +112,17 @@ export class LoginComponent {
     this.usuarioService.setUsuario(this.usuario.tipo, this.usuario);
     let routerAux = this.router; 
     this.usuarioService.setEstaLogueado$(true);
+    let now = new Date();
+    let fecha = now.getDate().toString()+"/"+(now.getMonth()+1).toString()+"/"+now.getFullYear().toString();
+    let hora = now.getHours().toString()+":"+this.formatoMinutos(now.getMinutes());
+    this.data.cargarLogIngresos(new LogIngreso(this.usuario.mail,fecha,hora));
     routerAux.navigateByUrl("");
+  }
+
+  formatoMinutos(minutos:number){
+    if(minutos < 10){
+      return "0" + minutos;
+    }
+    return minutos.toString();
   }
 }

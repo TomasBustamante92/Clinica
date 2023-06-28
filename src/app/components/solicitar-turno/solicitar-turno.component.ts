@@ -50,7 +50,6 @@ export class SolicitarTurnoComponent implements OnInit{
   // HORARIOS
   horariosEspecialistas:HorarioEspecialista[] = [];
 
-
   constructor(private data:DataService, private spinner:SpinnerService, private usuarioService:UsuariosService, private router: Router){}
   
   ngOnInit(): void {
@@ -124,6 +123,10 @@ export class SolicitarTurnoComponent implements OnInit{
               if(horarios == horEsp.lunFin){
                 indiceFin = index;
               }
+              if(horEsp.estados[0] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
+              }
               break;
             case "Martes":
               if(horarios == horEsp.marInicio){
@@ -131,6 +134,10 @@ export class SolicitarTurnoComponent implements OnInit{
               }
               if(horarios == horEsp.marFin){
                 indiceFin = index;
+              }
+              if(horEsp.estados[1] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
               }
               break;
             case "Miercoles":
@@ -140,6 +147,10 @@ export class SolicitarTurnoComponent implements OnInit{
               if(horarios == horEsp.mierFin){
                 indiceFin = index;
               }
+              if(horEsp.estados[2] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
+              }
               break;
             case "Jueves":
               if(horarios == horEsp.jueInicio){
@@ -147,6 +158,10 @@ export class SolicitarTurnoComponent implements OnInit{
               }
               if(horarios == horEsp.jueFin){
                 indiceFin = index;
+              }
+              if(horEsp.estados[3] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
               }
               break;
             case "Viernes":
@@ -156,6 +171,10 @@ export class SolicitarTurnoComponent implements OnInit{
               if(horarios == horEsp.vierFin){
                 indiceFin = index;
               }
+              if(horEsp.estados[4] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
+              }
               break;
             case "Sabado":
               if(horarios == horEsp.sabInicio){
@@ -163,6 +182,10 @@ export class SolicitarTurnoComponent implements OnInit{
               }
               if(horarios == horEsp.sabFin){
                 indiceFin = index;
+              }
+              if(horEsp.estados[5] == "Inhabilitado"){
+                indiceIni = 0;
+                indiceFin = 0;
               }
               break;
             }

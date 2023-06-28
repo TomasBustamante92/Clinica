@@ -1,0 +1,33 @@
+   
+
+<div style="text-align: center;">
+<div class="modal  position-static d-block p-4 py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+<div class="modal-content">
+    <div style="text-align: right; color:black;">
+        {{anio}}
+       <button class="btn btn-primary" (click)="cambiarMes('antes')"><</button> 
+       <button class="btn btn-primary" (click)="cambiarMes('despues')">></button> 
+    </div>
+    <h4 style="text-align: center;">
+        {{mes | mesString}}
+    </h4>
+    <table id="excel-table">
+        <tr>
+            <th>D</th>
+            <th>L</th>
+            <th>M</th>
+            <th>M</th>
+            <th>J</th>
+            <th>V</th>
+            <th>S</th>
+        </tr>
+        <tr *ngFor="let dias of mostrarCalendario"> 
+            <td (click)="elegirDia(dia)" *ngFor="let dia of dias"><span hoverColorear>{{dia}}</span></td>
+        </tr>
+    </table>
+</div>
+</div>
+<!-- </div> -->
+</div>
+
+
